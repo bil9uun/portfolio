@@ -33,7 +33,9 @@ const Navbar = () => {
         >
           Portfolio
         </Link>
-        <ul className="flex m-3 hover:text-red-500 cursor-pointer">News</ul>
+        <ul href="/News" className="flex m-3 hover:text-red-500 cursor-pointer">
+          News
+        </ul>
         <ul className="flex m-3 mr-10 hover:text-red-500 cursor-pointer">
           Contact
         </ul>

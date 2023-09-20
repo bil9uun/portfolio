@@ -38,7 +38,7 @@ const datasForAbout = [
   {
     icon: <IoLogoGameControllerB />,
     h1: "Interests",
-    p: "Playing, Sing",
+    p: "Video Games, Sing",
   },
   {
     icon: <FaUniversity />,
