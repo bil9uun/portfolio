@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Typewriter } from "react-simple-typewriter";
 
 function Home() {
   return (
@@ -15,7 +16,20 @@ function Home() {
             src="https://w0.peakpx.com/wallpaper/666/961/HD-wallpaper-anime-jujutsu-kaisen-satoru-gojo.jpg"
           />
           <h1 className=" text-5xl mb-0">Bilguun B</h1>
-          <p className=" mt-2.5">I'm a Web Developer</p>
+          <h1 className="text-black text-l mb-5 text-xl">
+            I'm Bilguun and
+            <span className="text-red-500">
+              <Typewriter
+                words={[" Web Developer", " Doctor"]}
+                loop={999}
+                cursor
+                cursorStyle="_"
+                typeSpeed={50}
+                deleteSpeed={30}
+                delaySpeed={1000}
+              />
+            </span>
+          </h1>
         </div>
       </div>
     </>
