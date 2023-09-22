@@ -33,12 +33,12 @@ const Navbar = () => {
         >
           Portfolio
         </Link>
-        <ul href="/News" className="flex m-3 hover:text-red-500 cursor-pointer">
-          News
-        </ul>
-        <ul className="flex m-3 mr-10 hover:text-red-500 cursor-pointer">
+        <Link
+          href="/Contact"
+          className="flex m-3 hover:text-red-500 cursor-pointer"
+        >
           Contact
-        </ul>
+        </Link>
       </nav>
     </div>
   );

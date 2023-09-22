@@ -54,8 +54,8 @@ const datasForAbout = [
 
 function About() {
   return (
-    <div className="">
-      <div className="">
+    <div className=" ml-10 mt-10">
+      <div>
         <p className="text-red-500 text-l ml-5 mt-5">BIOGRAPHY</p>
         <h1 className=" text-black text-5xl font-bold m-5 mb-10">About Me</h1>
       </div>

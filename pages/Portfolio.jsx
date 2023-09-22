@@ -37,8 +37,8 @@ const hi = () => {
 
 const Portfolio = () => {
   return (
-    <div className="flex flex-col w-3/5 absolute left-1/2 -translate-x-1/2 mt-5">
-      <div className="ml-10">
+    <div className="flex flex-col ml-10 mt-10 ">
+      <div className="">
         <p className="text-red-500 text-l">PORTFOLIO</p>
         <h1 className=" text-black text-5xl font-bold mb-10">
           Feautured Works

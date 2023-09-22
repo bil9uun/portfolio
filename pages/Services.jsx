@@ -45,7 +45,7 @@ const datas = [
 const Services = () => {
   return (
     <div>
-      <div>
+      <div className="ml-10 mt-10">
         <p className="text-red-500 text-l ml-5 mt-5">SERVICES</p>
         <h1 className=" text-black text-5xl font-bold m-5 mb-10">
           Quality Services

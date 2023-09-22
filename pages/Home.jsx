@@ -7,7 +7,7 @@ function Home() {
       <div className="homeSection">
         <img
           className="w-full h-full absolute top-0 -z-10 "
-          src="https://images.hdqwalls.com/wallpapers/mountains-minimal-landscape-4k-5b.jpg"
+          src="https`://images.hdqwalls.com/wallpapers/mountains-minimal-landscape-4k-5b.jpg"
         />
         <div className=" w-125 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center ">
           <img
