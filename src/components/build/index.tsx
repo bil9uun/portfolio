@@ -103,13 +103,22 @@ const Build = ({
       });
 
       if (immediate) run();
-      else
-        ScrollTrigger.create({
+      else {
+        // Build once. Don't use `once: true`: a trigger that is already past
+        // when created (e.g. after a replay) would kill itself in the middle
+        // of ScrollTrigger's refresh and crash it. Kill it a frame later.
+        let built = false;
+        const trigger = ScrollTrigger.create({
           trigger: root.current,
           start,
-          once: true,
-          onEnter: run,
+          onEnter: () => {
+            if (built) return;
+            built = true;
+            run();
+            requestAnimationFrame(() => trigger.kill());
+          },
         });
+      }
 
       return () => release?.();
     },

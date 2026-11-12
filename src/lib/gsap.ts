@@ -19,3 +19,9 @@ export function scrollToSection(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }
 }
+
+export function scrollToTop(smooth = true) {
+  const smoother = ScrollSmoother.get();
+  if (smoother) smoother.scrollTo(0, smooth);
+  else window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+}

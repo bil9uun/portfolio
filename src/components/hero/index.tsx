@@ -1,12 +1,11 @@
 import { useRef } from "react";
-import Lottie from "lottie-react";
-import animationData from "@/assets/lottie/scroll.json";
 import { profile } from "@/data/portfolio";
 import { useLocalTime } from "@/hooks/use-local-time";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { addFrameDraw, swarm } from "@/lib/swarm";
 import { SelectionFrame } from "@/components/build";
 import { cn } from "@/lib/utils";
+import { ui, useT } from "@/lib/i18n";
 
 const LETTERS = ["B", ".", "B", "i", "l", "g", "u", "u", "n"];
 
@@ -17,6 +16,8 @@ const HeroSection = () => {
   const box = useRef<HTMLDivElement>(null);
   const badge = useRef<HTMLSpanElement>(null);
   const time = useLocalTime(profile.timeZone);
+  const tr = useT();
+  const [scrollA, scrollB] = tr(ui.scrollHint).split("|");
 
   // Intro: a cursor drags a selection frame around the name,
   // then the letters rise into it, like a layer being built on a canvas.
@@ -24,7 +25,10 @@ const HeroSection = () => {
     () => {
       if (prefersReducedMotion()) return;
 
-      swarm.focus = title.current;
+      // Gather the free cursors round the name, if it is on screen.
+      const r = title.current!.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < window.innerHeight)
+        swarm.focus = title.current;
       const tl = gsap.timeline({ delay: 0.15 });
       const release = addFrameDraw(
         tl,
@@ -64,7 +68,6 @@ const HeroSection = () => {
       ref={root}
       className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6"
     >
-      <div aria-hidden className="canvas-grid absolute inset-0" />
 
       <div
         data-speed="0.85"
@@ -78,7 +81,7 @@ const HeroSection = () => {
             <span className="absolute inset-0 animate-ping rounded-full bg-signal opacity-60" />
             <span className="relative size-2 rounded-full bg-signal" />
           </span>
-          Open to new projects
+          {tr(ui.openToWork)}
         </p>
 
         <div className="relative">
@@ -116,9 +119,9 @@ const HeroSection = () => {
           data-hero-fade
           className="mt-12 text-sm font-medium uppercase leading-relaxed tracking-[0.16em] md:mt-8 md:text-[22px]"
         >
-          Software engineer,
-          <br className="sm:hidden" /> Full stack{" "}
-          <span className="text-signal">developer</span>
+          {tr(ui.roleLead)}
+          <br className="sm:hidden" /> {tr(ui.roleRest)}{" "}
+          <span className="text-signal">{tr(ui.roleAccent)}</span>
         </p>
       </div>
 
@@ -127,17 +130,21 @@ const HeroSection = () => {
         className="absolute inset-x-0 bottom-6 mx-auto flex max-w-7xl items-end justify-between px-6 font-mono text-[11px] uppercase tracking-[0.14em] text-fog md:bottom-8 md:px-10"
       >
         <p>
-          {profile.location}
+          {tr(profile.location)}
           <br />
-          <span className="text-bone">{time}</span> local time
+          <span className="text-bone">{time}</span> {tr(ui.localTime)}
         </p>
-        <div aria-hidden className="w-20 md:w-28">
-          <Lottie animationData={animationData} loop autoplay />
+        {/* Mouse with a scrolling wheel dot */}
+        <div
+          aria-hidden
+          className="relative h-11 w-7 rounded-full border-[1.5px] border-bone/70"
+        >
+          <span className="absolute left-1/2 top-2 size-1.5 -translate-x-1/2 animate-scroll-dot rounded-full bg-signal" />
         </div>
         <p className="text-right">
-          Scroll
+          {scrollA}
           <br />
-          to explore
+          {scrollB}
         </p>
       </div>
     </section>

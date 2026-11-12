@@ -3,16 +3,16 @@ import SectionHeading from "@/components/section-heading";
 import type { TimelineItem } from "@/data/portfolio";
 import Build from "@/components/build";
 import { gsap, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { useT } from "@/lib/i18n";
 
 type Props = {
-  id: string;
-  index: string;
-  title: string;
+  id: "experience";
   items: TimelineItem[];
 };
 
 // A dated list (work history, education) on a line that fills as you scroll.
-const TimelineSection = ({ id, index, title, items }: Props) => {
+const TimelineSection = ({ id, items }: Props) => {
+  const tr = useT();
   const list = useRef<HTMLDivElement>(null);
 
   // Each dot lights up as the line passes it.
@@ -52,7 +52,7 @@ const TimelineSection = ({ id, index, title, items }: Props) => {
   return (
     <section id={id} className="py-32 md:py-48">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading index={index} label={id} title={title} />
+        <SectionHeading id={id} />
 
         <div ref={list} className="relative mt-16 md:mt-24">
           <div
@@ -65,7 +65,7 @@ const TimelineSection = ({ id, index, title, items }: Props) => {
           <ol>
             {items.map((item) => (
               <li
-                key={item.period + item.role}
+                key={item.period.en + item.org}
                 className="relative pb-16 pl-10 last:pb-0 md:grid md:grid-cols-[13rem_1fr] md:pl-0"
               >
                 <span
@@ -74,18 +74,18 @@ const TimelineSection = ({ id, index, title, items }: Props) => {
                   className="absolute left-0 top-1.5 size-[15px] rounded-full border border-line bg-ink transition-colors duration-500 md:left-[13rem] [&.is-active]:border-signal [&.is-active]:bg-signal [&.is-active]:shadow-[0_0_0_6px_rgba(34,197,94,0.15)]"
                 />
                 <p className="font-mono text-sm text-fog md:pr-10 md:pt-1">
-                  {item.period}
+                  {tr(item.period)}
                 </p>
                 <Build
                   label={`Item · ${item.org}`}
                   className="mt-2 md:mt-0 md:ml-14"
                 >
                   <h3 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-                    {item.role}
+                    {tr(item.role)}
                   </h3>
                   <p className="mt-1 text-fog">{item.org}</p>
                   <p className="mt-5 max-w-2xl leading-relaxed text-bone/80">
-                    {item.summary}
+                    {tr(item.summary)}
                   </p>
                   {item.tags.length > 0 && (
                     <ul className="mt-5 flex flex-wrap gap-2">

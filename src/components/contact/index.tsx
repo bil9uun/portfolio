@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { ArrowUp, ArrowUpRight, Check, Copy, Phone } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Phone } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import { profile } from "@/data/portfolio";
-import { useLocalTime } from "@/hooks/use-local-time";
 import Build from "@/components/build";
-import { scrollToSection } from "@/lib/gsap";
+import Footer from "@/components/footer";
+import { ui, useT } from "@/lib/i18n";
 
 const ContactSection = () => {
-  const time = useLocalTime(profile.timeZone);
+  const tr = useT();
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -23,16 +23,11 @@ const ContactSection = () => {
   return (
     <section id="contact" className="pt-32 md:pt-48">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading
-          index="06"
-          label="contact"
-          title="Have a project in mind?"
-        />
+        <SectionHeading id="contact" />
 
         <Build label="Text · intro" className="mt-8 max-w-xl">
           <p className="text-lg leading-relaxed text-fog">
-            I'm open to frontend roles and freelance work. Write to me and I'll
-            reply within a day.
+            {tr(ui.contactIntro)}
           </p>
         </Build>
 
@@ -66,7 +61,7 @@ const ContactSection = () => {
                 <Copy aria-hidden className="size-3.5" />
               )}
               <span aria-live="polite">
-                {copied ? "Email copied" : "Copy email"}
+                {tr(copied ? ui.emailCopied : ui.copyEmail)}
               </span>
             </button>
           </div>
@@ -109,41 +104,7 @@ const ContactSection = () => {
           </ul>
         </Build>
 
-        <footer className="mt-32 flex flex-col gap-4 border-t border-line py-8 font-mono text-xs text-fog md:flex-row md:items-center md:justify-between">
-          <Build label="Text · copyright" start="top bottom" className="w-fit">
-            <p>
-              © {new Date().getFullYear()} {profile.name}. Designed and built
-              by me.
-            </p>
-          </Build>
-          <Build
-            label="Text · local time"
-            start="top bottom"
-            delay={0.1}
-            className="w-fit"
-          >
-            <p>
-              {profile.location} · <span className="text-bone">{time}</span>
-            </p>
-          </Build>
-          <Build
-            label="Link · back to top"
-            start="top bottom"
-            delay={0.2}
-            className="w-fit"
-          >
-            <a
-              href="#home"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("home");
-              }}
-              className="inline-flex items-center gap-1.5 transition-colors hover:text-bone"
-            >
-              Back to top <ArrowUp aria-hidden className="size-3.5" />
-            </a>
-          </Build>
-        </footer>
+        <Footer />
       </div>
     </section>
   );

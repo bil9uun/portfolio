@@ -1,4 +1,5 @@
 import type { gsap } from "@/lib/gsap";
+import { blip, click, panFor } from "@/lib/sound";
 
 type Point = { x: number; y: number };
 
@@ -56,6 +57,19 @@ export function addFrameDraw(
     if (r.width === 0 && r.height === 0) return null; // hidden, e.g. display: none
     return { x: r.left + r.width * draw.p, y: r.top + r.height * draw.p };
   };
+  // Only frames the visitor can see make sound.
+  const onScreen = () => {
+    const r = frame.getBoundingClientRect();
+    return r.width > 0 && r.bottom > 0 && r.top < innerHeight;
+  };
+  // 0..1: how much of the viewport the frame covers (big frames play low notes).
+  const frameSize = () => {
+    const r = frame.getBoundingClientRect();
+    return Math.min(
+      1,
+      Math.sqrt((r.width * r.height) / (innerWidth * innerHeight)),
+    );
+  };
   const release = () => {
     releaseCursor(task);
     task = null;
@@ -63,13 +77,27 @@ export function addFrameDraw(
 
   render();
   tl.call(
-    () => void (task = requestCursor(corner)),
+    // Only send a cursor to frames on screen; off-screen ones draw alone.
+    () => void (onScreen() && (task = requestCursor(corner))),
     undefined,
     Math.max(0, at - 0.25),
   )
     .fromTo(frame, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, at)
     .fromTo(badge, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, at)
     .to(draw, { p: 1, duration, ease: "power2.inOut", onUpdate: render }, at)
+    .call(
+      () => void (onScreen() && click({ pan: panFor(corner()!.x) })),
+      undefined,
+      at,
+    )
+    .call(
+      () =>
+        void (
+          onScreen() && blip({ size: frameSize(), pan: panFor(corner()!.x) })
+        ),
+      undefined,
+      at + duration,
+    )
     .call(release, undefined, at + duration + 0.05)
     .to(badge, { autoAlpha: 0, duration: 0.2 }, at + duration + 0.1)
     .to(frame, { autoAlpha: 0, duration: 0.35 }, at + duration + 0.3);

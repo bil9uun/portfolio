@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import { projects } from "@/data/portfolio";
 import Build from "@/components/build";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { ui, useT } from "@/lib/i18n";
 
 const PREVIEW_WIDTH = 320;
 
@@ -15,6 +17,7 @@ const WorkSection = () => {
   );
   const visible = useRef(false);
   const [active, setActive] = useState(0);
+  const tr = useT();
 
   useGSAP(() => {
     gsap.set(preview.current, { autoAlpha: 0, scale: 0.85 });
@@ -68,7 +71,7 @@ const WorkSection = () => {
   return (
     <section id="work" className="py-32 md:py-48">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading index="03" label="work" title="Selected work" />
+        <SectionHeading id="work" />
 
         <ul
           onPointerMove={move}
@@ -81,10 +84,9 @@ const WorkSection = () => {
                 label={`Row · ${project.title}`}
                 frameClassName="inset-x-0 inset-y-2"
               >
-                <a
-                  href={project.url}
-                  target={project.url.startsWith("http") ? "_blank" : undefined}
-                  rel="noreferrer"
+                <Link
+                  to="/work/$slug"
+                  params={{ slug: project.slug }}
                   data-swarm
                   data-index={i}
                   className="group grid grid-cols-12 items-baseline gap-x-4 gap-y-2 border-t border-line py-8 md:py-11"
@@ -100,15 +102,15 @@ const WorkSection = () => {
                     className="col-span-1 size-6 self-center justify-self-end text-fog transition-all duration-500 group-hover:rotate-45 group-hover:text-signal md:order-last md:size-8"
                   />
                   <span className="col-span-12 text-sm text-fog md:col-span-4">
-                    <span className="text-bone">{project.role}</span>
+                    <span className="text-bone">{tr(project.role)}</span>
                     <span className="mt-1 block font-mono text-xs">
                       {project.tags.join(" · ")}
                     </span>
                   </span>
                   <span className="col-span-12 mt-2 max-w-xl text-sm leading-relaxed text-fog pointer-fine:hidden">
-                    {project.description}
+                    {tr(project.description)}
                   </span>
-                </a>
+                </Link>
               </Build>
             </li>
           ))}
@@ -137,7 +139,10 @@ const WorkSection = () => {
             </span>
           </div>
           <p className="p-4 text-sm leading-relaxed text-fog">
-            {current.description}
+            {tr(current.description)}
+          </p>
+          <p className="border-t border-line px-4 py-3 font-mono text-[11px] text-signal">
+            {tr(ui.viewCase)} →
           </p>
         </div>,
         document.body,
