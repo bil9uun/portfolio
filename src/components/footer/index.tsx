@@ -1,4 +1,5 @@
-import { ArrowUp, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowUp, Gamepad2, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import Build from "@/components/build";
 import { profile } from "@/data/portfolio";
 import { useLocalTime } from "@/hooks/use-local-time";
@@ -28,7 +29,7 @@ const Footer = () => {
           delay={0.1}
           className="w-fit"
         >
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-3">
             <button
               type="button"
               onClick={() => setSound(!sound)}
@@ -46,6 +47,10 @@ const Footer = () => {
               <RotateCcw aria-hidden className="size-3.5" />
               {tr(ui.replay)}
             </button>
+            <Link to="/play" className={control}>
+              <Gamepad2 aria-hidden className="size-3.5" />
+              {tr(ui.play)}
+            </Link>
           </div>
         </Build>
       </div>

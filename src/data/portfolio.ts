@@ -23,6 +23,7 @@ export const navItems = [
   { id: "work", label: t("work", "төслүүд") },
   { id: "experience", label: t("experience", "туршлага") },
   { id: "education", label: t("education", "боловсрол") },
+  { id: "play", label: t("play", "тоглоом") },
   { id: "contact", label: t("contact", "холбоо барих") },
 ];
 
@@ -31,6 +32,7 @@ export const sectionTitles = {
   work: t("Selected work", "Сонгосон төслүүд"),
   experience: t("Experience", "Ажлын туршлага"),
   education: t("Education", "Боловсрол"),
+  play: t("Take a break", "Жаахан амар"),
   contact: t("Have a project in mind?", "Хамтран ажиллах санаа байна уу?"),
 };
 

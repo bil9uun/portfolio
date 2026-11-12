@@ -1,3 +1,4 @@
+import ArcadeSection from "@/components/arcade";
 import ContactSection from "@/components/contact";
 import ExpertiseSection from "@/components/expertise";
 import HeroSection from "@/components/hero";
@@ -21,6 +22,7 @@ function Index() {
       <WorkSection />
       <TimelineSection id="experience" items={experience} />
       <EducationSection />
+      <ArcadeSection />
       <ContactSection />
     </div>
   );

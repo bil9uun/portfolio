@@ -6,6 +6,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Copy,
+  Gamepad2,
   Languages,
   MessageCircle,
   Phone,
@@ -13,6 +14,7 @@ import {
   ScanSearch,
   Volume2,
 } from "lucide-react";
+import { games } from "@/components/games/registry";
 import { navItems, profile, projects } from "@/data/portfolio";
 import { setLang, ui, useLang, useT } from "@/lib/i18n";
 import { useGoToSection } from "@/lib/navigation";
@@ -170,6 +172,37 @@ const CommandPalette = () => {
           >
             {tr(ui.toggleSound)}
           </Item>
+        </Command.Group>
+
+        <Command.Group heading={tr(ui.play)} className={group}>
+          <Item
+            icon={<Gamepad2 />}
+            keywords={["game", "play", "arcade", "тоглоом"]}
+            onSelect={run(() => void navigate({ to: "/play" }))}
+          >
+            {tr(ui.allGames)}
+          </Item>
+          {games.map((game) => (
+            <Item
+              key={game.id}
+              icon={
+                <span
+                  className="size-2 rounded-full"
+                  style={{ background: game.color }}
+                />
+              }
+              keywords={["game", "play", game.title.en, game.title.mn]}
+              onSelect={run(
+                () =>
+                  void navigate({
+                    to: "/play/$game",
+                    params: { game: game.id },
+                  }),
+              )}
+            >
+              {tr(game.title)}
+            </Item>
+          ))}
         </Command.Group>
 
         <Command.Group heading={tr(ui.links)} className={group}>

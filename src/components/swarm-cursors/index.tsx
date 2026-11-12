@@ -151,7 +151,8 @@ const SwarmCursors = () => {
         swarm.tasks.size === 0 &&
         !rect &&
         (!mouse.active || now - mouse.last > 2500);
-      opacity += ((resting ? 0.3 : 1) - opacity) * Math.min(1, dt * 3);
+      const target = swarm.hidden ? 0 : resting ? 0.3 : 1;
+      opacity += (target - opacity) * Math.min(1, dt * 3);
       if (layer.current) layer.current.style.opacity = opacity.toFixed(3);
 
       for (let i = 0; i < n; i++) {

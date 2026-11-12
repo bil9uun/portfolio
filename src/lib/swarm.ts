@@ -10,9 +10,11 @@ export type SwarmTask = { point: () => Point | null; agent: number };
 // Shared state the cursor swarm reads every frame.
 // focus: element the free cursors circle (set by code, wins over hover).
 // hover: [data-swarm] element under the pointer (set by the swarm itself).
+// hidden: fade the swarm out, e.g. while a game needs the visitor's focus.
 export const swarm = {
   focus: null as Element | null,
   hover: null as Element | null,
+  hidden: false,
   tasks: new Set<SwarmTask>(),
 };
 

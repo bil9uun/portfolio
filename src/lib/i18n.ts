@@ -84,4 +84,6 @@ export const ui = {
   chat: t("Chat with the cursors", "Cursor-уудтай чатлах"),
   chatPlaceholder: t("Say something…", "Юм бичээрэй…"),
   call: t("Call", "Залгах"),
+  play: t("Play", "Тоглох"),
+  allGames: t("All games", "Бүх тоглоом"),
 };

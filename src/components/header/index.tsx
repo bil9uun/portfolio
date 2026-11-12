@@ -39,8 +39,9 @@ const Header = () => {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  // Case study pages live under "work".
-  const active = pathname === "/" ? section : "work";
+  // Case study pages live under "work"; other pages highlight nothing.
+  const active =
+    pathname === "/" ? section : pathname.startsWith("/work") ? "work" : "";
 
   useEffect(() => {
     let lastY = window.scrollY;
