@@ -20,7 +20,6 @@ const ExpertiseSection = () => {
                   label={`Item · ${title.en}`}
                   delay={i * 0.1}
                   data-swarm
-                  frameClassName="inset-x-0 inset-y-1"
                   className="group"
                 >
                   <div className="grid grid-cols-[auto_1fr] gap-x-5 border-t border-line py-8">
@@ -46,7 +45,6 @@ const ExpertiseSection = () => {
           <Build
             label="Frame · stack"
             delay={0.2}
-            frameClassName="-inset-2"
             className="lg:col-span-7"
           >
             <SkillPile />

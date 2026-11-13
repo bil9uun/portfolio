@@ -17,6 +17,7 @@ import {
   projects,
 } from "@/data/portfolio";
 import gaming from "@/data/gaming.json";
+import { useGroups } from "@/data/uses";
 import { localStatus } from "@/hooks/use-local-time";
 import { achievements, unlock, unlocked } from "@/lib/achievements";
 import { personalLink } from "@/lib/guest";
@@ -99,8 +100,10 @@ const HELP: [string, Text][] = [
   ["skills", t("what I work with", "ур чадвар")],
   ["contact", t("how to reach me", "холбоо барих")],
   ["cv", t("open the printable CV", "хэвлэх CV нээх")],
+  ["uses", t("the hardware on my desks", "миний тоног төхөөрөмж")],
   ["date", t("my local time and status", "миний цаг, байдал")],
   ["faceit", t("my Counter-Strike stats", "Counter-Strike статистик")],
+  ["steam", t("my Steam profile", "Steam профайл")],
   ["play [game]", t("list or open a game", "тоглоом жагсаах, нээх")],
   ["achievements", t("what you've found so far", "олсон амжилтууд")],
   ["link <name>", t("make a personal link", "хувийн холбоос үүсгэх")],
@@ -313,6 +316,23 @@ const Terminal = () => {
       case "cv":
         leave(() => void navigate({ to: "/cv" }));
         break;
+      case "uses":
+        print(
+          <ul>
+            {useGroups.map((g) => (
+              <li key={g.id} className="mt-1">
+                <span className="text-bone">{tr(g.title)}</span>
+                {g.items.map((item) => (
+                  <span key={item.name} className="block pl-4">
+                    {tr(item.kind)}: {item.name}
+                  </span>
+                ))}
+              </li>
+            ))}
+            <li className="mt-1">→ /uses</li>
+          </ul>,
+        );
+        break;
       case "date": {
         const time = new Intl.DateTimeFormat("en-GB", {
           dateStyle: "medium",
@@ -328,26 +348,54 @@ const Terminal = () => {
         break;
       }
       case "faceit": {
-        const { faceit, steam } = gaming;
+        const f = gaming.faceit;
+        if (!f) break;
+        const l = f.lifetime;
         print(
           <ul>
-            {faceit && (
+            <li>
+              <span className="text-bone">
+                {f.nickname} · level {f.level} · {f.elo} ELO
+              </span>
+              {f.regionRank !== null && ` · ${f.region} #${f.regionRank}`}
+            </li>
+            {l && (
               <li>
-                FACEIT{"  "}
-                <span className="text-bone">
-                  {faceit.nickname} · level {faceit.level} · {faceit.elo} ELO
-                </span>
+                {l.matches} matches · {l.winRate}% wins · K/D {l.kd} · HS{" "}
+                {l.headshots}% · ADR {Math.round(l.adr)}
               </li>
             )}
-            {steam?.cs2Hours != null && (
-              <li>
-                Steam{"   "}
-                <span className="text-bone">
-                  {steam.persona} · {steam.cs2Hours.toLocaleString("en-US")}{" "}
-                  {tr(copy.hours)}
-                </span>
+            {f.matches.slice(0, 5).map((m, i) => (
+              <li key={i}>
+                <span className={m.win ? "text-signal" : "text-[#FF7A45]"}>
+                  {m.win ? "W" : "L"}
+                </span>{" "}
+                {m.map} {m.score[0]}:{m.score[1]} · {m.kills}/{m.deaths}/
+                {m.assists} · {m.delta >= 0 ? "+" : ""}
+                {m.delta} ELO
               </li>
-            )}
+            ))}
+          </ul>,
+        );
+        break;
+      }
+      case "steam": {
+        const s = gaming.steam;
+        if (!s) break;
+        print(
+          <ul>
+            <li>
+              <span className="text-bone">
+                {s.persona} · level {s.level}
+              </span>{" "}
+              · {s.cs2Hours?.toLocaleString("en-US")} {tr(copy.hours)} ·{" "}
+              {s.recentHours} h / 2 wk
+            </li>
+            {s.recent.map((g) => (
+              <li key={g.name}>
+                {g.name} · {g.hours.toLocaleString("en-US")} h
+              </li>
+            ))}
           </ul>,
         );
         break;

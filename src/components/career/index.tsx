@@ -263,7 +263,6 @@ const CareerSection = () => {
         <Build
           label="Frame · timeline"
           className="mt-16 md:mt-24"
-          frameClassName="-inset-3"
         >
           <div>
             <div

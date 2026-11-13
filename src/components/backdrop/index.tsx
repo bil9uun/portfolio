@@ -110,6 +110,8 @@ const SECTION_TINTS: [string, string][] = [
   ["work", "#4D8DFF"],
   ["experience", "#A57BFF"],
   ["play", "#FF5CA8"],
+  ["afk", "#FF7A45"],
+  ["setup", "#2EC4D6"],
   ["contact", "#22C55E"],
 ];
 const DEFAULT_TINT = "#22C55E";

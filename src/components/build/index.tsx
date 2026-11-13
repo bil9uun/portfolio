@@ -57,12 +57,47 @@ export const SelectionFrame = ({
 type BuildProps = HTMLAttributes<HTMLDivElement> & {
   label: string;
   delay?: number;
-  frameClassName?: string;
   /** Draw on page load instead of on scroll, e.g. for the fixed header. */
   immediate?: boolean;
   /** ScrollTrigger start position. */
   start?: string;
 };
+
+const PAD = 8; // px between the content and its selection frame
+
+// Where the content really is, relative to `root`: the union of every
+// element inside it, so text descenders, negative margins and overflowing
+// children are covered too. Clipping containers count as their own box
+// (their children may sit far outside, e.g. chips parked off-canvas).
+function contentBox(root: HTMLElement, content: HTMLElement, shiftY: number) {
+  let left = Infinity;
+  let top = Infinity;
+  let right = -Infinity;
+  let bottom = -Infinity;
+  const visit = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    const style = getComputedStyle(el);
+    if (style.position === "fixed") return;
+    // Skip hidden boxes and visually-hidden (sr-only) text.
+    if (r.width > 1 && r.height > 1) {
+      left = Math.min(left, r.left);
+      top = Math.min(top, r.top);
+      right = Math.max(right, r.right);
+      bottom = Math.max(bottom, r.bottom);
+    }
+    if (/hidden|clip/.test(style.overflow)) return;
+    for (const child of el.children) visit(child);
+  };
+  visit(content);
+  if (left === Infinity) return null;
+  const base = root.getBoundingClientRect();
+  return {
+    left: left - base.left,
+    top: top - base.top - shiftY,
+    width: right - left,
+    height: bottom - top,
+  };
+}
 
 // Wraps a piece of the page so a swarm cursor "draws" it into existence
 // the first time it scrolls into view (or on load when `immediate`).
@@ -70,7 +105,6 @@ const Build = ({
   label,
   delay = 0,
   className,
-  frameClassName = "-inset-2",
   immediate = false,
   start = "top 90%",
   children,
@@ -120,8 +154,27 @@ const Build = ({
         });
       });
 
+      // Fit the frame round the content as it is now (it is still shifted
+      // down by its entrance offset, so take that back out).
+      const fit = () => {
+        const box = contentBox(
+          root.current!,
+          content.current!,
+          Number(gsap.getProperty(content.current, "y")) || 0,
+        );
+        if (!box) return;
+        Object.assign(frame.current!.style, {
+          left: `${box.left - PAD}px`,
+          top: `${box.top - PAD}px`,
+          width: `${box.width + PAD * 2}px`,
+          height: `${box.height + PAD * 2}px`,
+        });
+      };
+
       const run = contextSafe!(() => {
+        fit();
         const tl = gsap.timeline({ delay });
+        tl.call(fit, undefined, 0); // again after the delay: fonts may have loaded
         release = addFrameDraw(
           tl,
           { frame: frame.current!, box: box.current!, badge: badge.current! },
@@ -170,7 +223,7 @@ const Build = ({
     <div ref={root} className={cn("relative", className)} {...rest}>
       <SelectionFrame
         label={label}
-        className={frameClassName}
+        className="left-0 top-0 size-full"
         frameRef={frame}
         boxRef={box}
         badgeRef={badge}

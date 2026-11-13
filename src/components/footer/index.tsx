@@ -4,6 +4,7 @@ import {
   ArrowUp,
   FileText,
   Gamepad2,
+  Monitor,
   RotateCcw,
   Volume2,
   VolumeX,
@@ -77,6 +78,10 @@ const Footer = () => {
             <Link to="/cv" className={control}>
               <FileText aria-hidden className="size-3.5" />
               {tr(ui.cv)}
+            </Link>
+            <Link to="/uses" className={control}>
+              <Monitor aria-hidden className="size-3.5" />
+              {tr(ui.uses)}
             </Link>
           </div>
         </Build>

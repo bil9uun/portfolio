@@ -99,12 +99,7 @@ const Header = () => {
         )}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 md:px-10 md:py-6">
-          <Build
-            label="Logo"
-            immediate
-            delay={0.2}
-            frameClassName="-inset-x-2 -inset-y-1"
-          >
+          <Build label="Logo" immediate delay={0.2}>
             <a
               href="/#home"
               onClick={(e) => go(e, "home")}
@@ -114,77 +109,70 @@ const Header = () => {
             </a>
           </Build>
 
-          <nav aria-label="Sections" className="hidden xl:block">
-            <ul className="flex gap-10">
-              {navItems.map(({ id, label }, i) => {
-                const isActive = active === id;
-                return (
-                  <li key={id}>
-                    <Build
-                      label={`Nav · ${id}`}
-                      immediate
-                      delay={0.35 + i * 0.08}
-                      frameClassName="-inset-x-2 -inset-y-1"
-                    >
-                      <a
-                        href={`/#${id}`}
-                        onClick={(e) => go(e, id)}
-                        aria-current={isActive ? "true" : undefined}
-                        className={cn(
-                          "group flex flex-col font-mono text-[13px] transition-colors duration-300",
-                          isActive ? "text-bone" : "text-fog hover:text-bone",
-                        )}
-                      >
-                        <span className="self-end text-[10px] text-fog">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span className="whitespace-nowrap">
-                          <span
-                            className={cn(
-                              "mr-2 transition-colors duration-300",
-                              isActive
-                                ? "text-signal"
-                                : "text-line group-hover:text-fog",
-                            )}
-                          >
-                            //
-                          </span>
+          <Build label="Nav" immediate delay={0.35} className="hidden xl:block">
+            <nav aria-label="Sections">
+              <ul className="flex gap-8">
+                {/* The logo leads home, so the bar skips it. */}
+                {navItems
+                  .filter(({ id }) => id !== "home")
+                  .map(({ id, label }) => {
+                    const isActive = active === id;
+                    return (
+                      <li key={id}>
+                        <a
+                          href={`/#${id}`}
+                          onClick={(e) => go(e, id)}
+                          aria-current={isActive ? "true" : undefined}
+                          className={cn(
+                            "relative whitespace-nowrap font-mono text-[13px] transition-colors duration-300",
+                            isActive ? "text-bone" : "text-fog hover:text-bone",
+                          )}
+                        >
                           {tr(label)}
-                        </span>
-                      </a>
-                    </Build>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+                          <span
+                            aria-hidden
+                            className={cn(
+                              "absolute -bottom-2.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-signal transition-opacity duration-300",
+                              isActive ? "opacity-100" : "opacity-0",
+                            )}
+                          />
+                        </a>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </nav>
+          </Build>
 
-          <Build
-            label="Controls"
-            immediate
-            delay={0.8}
-            frameClassName="-inset-x-2 -inset-y-1.5"
-          >
-            <div className="flex items-center gap-5">
+          <Build label="Controls" immediate delay={0.5}>
+            <div className="flex items-center gap-4">
               <LangToggle />
-              <button
-                id="terminal-button"
-                type="button"
-                onClick={() => terminalOpen.set(true)}
-                aria-label={tr(ui.terminal)}
-                title={tr(ui.terminal)}
-                className="rounded border border-line px-2 py-1 font-mono text-[11px] text-fog transition-colors hover:border-signal hover:text-bone"
-              >
-                &gt;_
-              </button>
-              <button
-                type="button"
-                onClick={() => paletteOpen.set(true)}
-                aria-label={tr(ui.searchCommands)}
-                className="hidden rounded border border-line px-2 py-1 font-mono text-[11px] text-fog transition-colors hover:border-signal hover:text-bone md:block"
-              >
-                ⌘K
-              </button>
+              {/* Terminal and command palette, as one pill */}
+              <div className="flex items-center rounded-full border border-line font-mono text-[11px] text-fog">
+                <button
+                  id="terminal-button"
+                  type="button"
+                  onClick={() => terminalOpen.set(true)}
+                  aria-label={tr(ui.terminal)}
+                  title={tr(ui.terminal)}
+                  className="px-3 py-1.5 transition-colors hover:text-bone"
+                >
+                  &gt;_
+                </button>
+                <span
+                  aria-hidden
+                  className="hidden h-3 w-px bg-line md:block"
+                />
+                <button
+                  type="button"
+                  onClick={() => paletteOpen.set(true)}
+                  aria-label={tr(ui.searchCommands)}
+                  title={tr(ui.searchCommands)}
+                  className="hidden px-3 py-1.5 transition-colors hover:text-bone md:block"
+                >
+                  ⌘K
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}

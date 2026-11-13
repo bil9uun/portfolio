@@ -9,6 +9,7 @@ import {
   FileText,
   Gamepad2,
   Languages,
+  Monitor,
   MessageCircle,
   Phone,
   RotateCcw,
@@ -200,6 +201,16 @@ const CommandPalette = () => {
             onSelect={run(() => void navigate({ to: "/cv" }))}
           >
             {tr(ui.viewCv)}
+          </Item>
+          <Item
+            icon={<Monitor />}
+            keywords={["uses", "setup", "desk", "pc", "gear", "hardware"]}
+            onSelect={run(() => void navigate({ to: "/uses" }))}
+          >
+            {tr(ui.usesLong)}
+            <span className="ml-auto font-mono text-[11px] text-fog">
+              /uses
+            </span>
           </Item>
           <Item
             icon={<Trophy />}

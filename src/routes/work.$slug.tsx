@@ -51,7 +51,6 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
           immediate
           delay={0.3}
           className="mt-10 w-fit"
-          frameClassName="-inset-x-3 -inset-y-2"
         >
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-fog">
             <span className="text-signal">
@@ -107,7 +106,6 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
           label="Frame · cover"
           immediate
           delay={0.6}
-          frameClassName="-inset-2"
         >
           <div
             className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line md:aspect-[21/9]"
@@ -148,7 +146,6 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
                 <Build
                   label={`Item · ${i + 1}`}
                   delay={i * 0.06}
-                  frameClassName="inset-x-0 inset-y-1"
                 >
                   <p className="flex gap-5 border-b border-line py-6 text-lg leading-snug">
                     {/* Square bullet, like a selection handle */}
@@ -167,7 +164,6 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
         <Build
           label="Link · next project"
           className="mt-32 md:mt-44"
-          frameClassName="inset-x-0 -inset-y-2"
         >
           <Link
             to="/work/$slug"

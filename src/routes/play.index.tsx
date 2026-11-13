@@ -42,7 +42,6 @@ function PlayHub() {
         immediate
         delay={0.3}
         className="mt-10 w-fit"
-        frameClassName="-inset-x-3 -inset-y-2"
       >
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-fog">
           <span className="text-signal">//</span> {tr(copy.eyebrow)}
@@ -78,7 +77,6 @@ function PlayHub() {
               <Build
                 label={`Game · ${game.title.en}`}
                 delay={(i % 3) * 0.1}
-                frameClassName="inset-3"
                 className="h-full"
               >
                 <Link

@@ -49,7 +49,6 @@ function GamePage() {
             immediate
             delay={0.3}
             className="mt-10 w-fit"
-            frameClassName="-inset-x-3 -inset-y-2"
           >
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-fog">
               <span style={{ color: game.color }}>//</span> {tr(copy.eyebrow)}

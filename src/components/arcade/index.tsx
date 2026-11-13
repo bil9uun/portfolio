@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Build from "@/components/build";
-import OffClock from "@/components/off-clock";
 import SectionHeading from "@/components/section-heading";
 import { games } from "@/components/games/registry";
 import { readBest } from "@/components/games/use-best";
@@ -38,7 +37,6 @@ const ArcadeSection = () => {
           <Build
             label="Frame · playground"
             className="lg:col-span-7"
-            frameClassName="-inset-2"
           >
             <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-signal">
               {tr(copy.tryIt)}
@@ -68,7 +66,6 @@ const ArcadeSection = () => {
                     <Build
                       label={`Row · ${game.title.en}`}
                       delay={i * 0.05}
-                      frameClassName="inset-x-0 inset-y-1"
                     >
                       <Link
                         to="/play/$game"
@@ -121,7 +118,6 @@ const ArcadeSection = () => {
                 />
               </Link>
             </Build>
-            <OffClock />
           </div>
         </div>
       </div>

@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsesRouteImport } from './routes/uses'
 import { Route as CvRouteImport } from './routes/cv'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 import { Route as PlayGameRouteImport } from './routes/play.$game'
 
+const UsesRoute = UsesRouteImport.update({
+  id: '/uses',
+  path: '/uses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CvRoute = CvRouteImport.update({
   id: '/cv',
   path: '/cv',
@@ -44,6 +50,7 @@ const PlayGameRoute = PlayGameRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cv': typeof CvRoute
+  '/uses': typeof UsesRoute
   '/play/$game': typeof PlayGameRoute
   '/work/$slug': typeof WorkSlugRoute
   '/play': typeof PlayIndexRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cv': typeof CvRoute
+  '/uses': typeof UsesRoute
   '/play/$game': typeof PlayGameRoute
   '/work/$slug': typeof WorkSlugRoute
   '/play': typeof PlayIndexRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cv': typeof CvRoute
+  '/uses': typeof UsesRoute
   '/play/$game': typeof PlayGameRoute
   '/work/$slug': typeof WorkSlugRoute
   '/play/': typeof PlayIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cv' | '/play/$game' | '/work/$slug' | '/play'
+  fullPaths: '/' | '/cv' | '/uses' | '/play/$game' | '/work/$slug' | '/play'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cv' | '/play/$game' | '/work/$slug' | '/play'
-  id: '__root__' | '/' | '/cv' | '/play/$game' | '/work/$slug' | '/play/'
+  to: '/' | '/cv' | '/uses' | '/play/$game' | '/work/$slug' | '/play'
+  id:
+    | '__root__'
+    | '/'
+    | '/cv'
+    | '/uses'
+    | '/play/$game'
+    | '/work/$slug'
+    | '/play/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CvRoute: typeof CvRoute
+  UsesRoute: typeof UsesRoute
   PlayGameRoute: typeof PlayGameRoute
   WorkSlugRoute: typeof WorkSlugRoute
   PlayIndexRoute: typeof PlayIndexRoute
@@ -81,6 +98,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/uses': {
+      id: '/uses'
+      path: '/uses'
+      fullPath: '/uses'
+      preLoaderRoute: typeof UsesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cv': {
       id: '/cv'
       path: '/cv'
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CvRoute: CvRoute,
+  UsesRoute: UsesRoute,
   PlayGameRoute: PlayGameRoute,
   WorkSlugRoute: WorkSlugRoute,
   PlayIndexRoute: PlayIndexRoute,

@@ -90,7 +90,6 @@ const WorkSection = () => {
             <li key={project.title} className="transition-opacity duration-500">
               <Build
                 label={`Row · ${project.title}`}
-                frameClassName="inset-x-0 inset-y-2"
               >
                 <Link
                   to="/work/$slug"

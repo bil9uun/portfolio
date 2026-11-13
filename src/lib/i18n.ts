@@ -98,6 +98,8 @@ export const ui = {
       `Сайн байна уу, ${name}. Танд зориулав.`,
     ),
   cv: t("CV", "CV"),
+  uses: t("Uses", "Uses"),
+  usesLong: t("What's on my desks", "Миний ширээн дээр"),
   viewCv: t("View CV", "CV үзэх"),
   terminal: t("Open the terminal", "Terminal нээх"),
   // {key} is drawn as a key cap.
