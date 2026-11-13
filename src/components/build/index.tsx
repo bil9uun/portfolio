@@ -87,6 +87,38 @@ const Build = ({
       let release: (() => void) | undefined;
 
       gsap.set(content.current, { autoAlpha: 0, y: 16 });
+      const onScreen = () => {
+        const r = root.current!.getBoundingClientRect();
+        return r.bottom > 0 && r.top < window.innerHeight;
+      };
+
+      // Calls `done` once this element has stopped moving on screen
+      // (the smoothed scroll has settled), or after a second at most.
+      let timer = 0;
+      const waitForRest = (done: () => void) => {
+        let last = root.current!.getBoundingClientRect().top;
+        let still = 0;
+        let tries = 0;
+        const check = () => {
+          const top = root.current?.getBoundingClientRect().top ?? last;
+          still = Math.abs(top - last) < 1 ? still + 1 : 0;
+          last = top;
+          if (still >= 3 || ++tries > 16) done();
+          else timer = window.setTimeout(check, 60);
+        };
+        timer = window.setTimeout(check, 60);
+      };
+
+      // Show the content at once, without a frame, cursor or sound.
+      const show = contextSafe!(() => {
+        gsap.to(content.current, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.3,
+          overwrite: true,
+        });
+      });
+
       const run = contextSafe!(() => {
         const tl = gsap.timeline({ delay });
         release = addFrameDraw(
@@ -111,16 +143,24 @@ const Build = ({
         const trigger = ScrollTrigger.create({
           trigger: root.current,
           start,
-          onEnter: () => {
+          onEnter: (self) => {
             if (built) return;
             built = true;
-            run();
             requestAnimationFrame(() => trigger.kill());
+            if (Math.abs(self.getVelocity()) < 1500 && onScreen()) return run();
+            // Moving fast (a flick of the wheel, a jump from the nav): wait for
+            // the page to come to rest, then draw only what is on screen and
+            // simply show the rest. Drawing everything we fly past would be a
+            // frantic blur of cursors and sound.
+            waitForRest(() => (onScreen() ? run() : show()));
           },
         });
       }
 
-      return () => release?.();
+      return () => {
+        clearTimeout(timer);
+        release?.();
+      };
     },
     { scope: root },
   );

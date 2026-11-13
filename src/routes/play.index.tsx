@@ -69,9 +69,10 @@ function PlayHub() {
               key={game.id}
               className={cn(
                 "bg-ink",
-                // 7 cards: wide first and last cards fill the 2- and 3-column grids.
+                // 8 cards: a wide first card fills the 3-column grid; a wide last
+                // card evens out the 2-column one.
                 i === 0 && "md:col-span-2",
-                i === games.length - 1 && "lg:col-span-2",
+                i === games.length - 1 && "md:col-span-2 lg:col-span-1",
               )}
             >
               <Build

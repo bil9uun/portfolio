@@ -25,7 +25,7 @@ export const games: Game[] = [
     ),
     best: (v) => same(`${v}`),
     color: "#22C55E",
-    Component: lazy(() => import("@/components/snake")),
+    Component: lazy(() => import("@/components/games/snake")),
   },
   {
     id: "herd",
@@ -92,6 +92,17 @@ export const games: Game[] = [
     best: (v) => t(`${v} wins`, `${v} хожил`),
     color: "#2EC4D6",
     Component: lazy(() => import("@/components/games/chess")),
+  },
+  {
+    id: "memory",
+    title: t("Stack Memory", "Stack санах ой"),
+    blurb: t(
+      "Flip the cards two at a time and find every pair of skills in as few moves as you can.",
+      "Картуудыг хоёр хоёроор нь эргүүлж, skill-ийн хос бүрийг аль болох цөөн нүүдлээр олоорой.",
+    ),
+    best: (v) => t(`${v} moves`, `${v} нүүдэл`),
+    color: "#34D399",
+    Component: lazy(() => import("@/components/games/memory")),
   },
 ];
 

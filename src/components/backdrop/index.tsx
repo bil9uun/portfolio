@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/gsap";
 
 // A 3D version of the site's dotted design canvas: a field of points that
-// recedes to the horizon and swells in slow waves. Crests glow signal green,
-// the pointer tilts the camera, and scrolling carries the field towards you.
+// recedes to the horizon and swells in slow waves.
+// - Crests glow in the colour of the section you are reading.
+// - The ground lifts and lights up under your pointer; a click sends a ripple.
+// - The pointer tilts the camera; scrolling carries the field towards you.
 // Plain WebGL, no 3D library: one draw call of points per frame.
 
 const VERTEX = /* glsl */ `
@@ -12,10 +14,14 @@ uniform float u_time;
 uniform float u_scroll;
 uniform float u_energy;
 uniform vec2 u_mouse;
+uniform vec3 u_pointer; // ground x, ground z, strength
+uniform vec4 u_ripple;  // ground x, ground z, age (s), strength
 uniform float u_aspect;
 uniform float u_dpr;
 varying float v_alpha;
 varying float v_crest;
+varying float v_glow;
+varying float v_far;
 
 const float WIDTH = 46.0;
 const float DEPTH = 70.0;
@@ -33,7 +39,15 @@ void main() {
       sin(x * 0.32 + t * 0.55) * 0.45 +
       sin(z * 0.21 - t * 0.38) * 0.55 +
       sin((x + z) * 0.13 + t * 0.27) * 0.6;
-  float y = -2.0 + wave * (0.75 + u_energy * 0.5);
+
+  // The ground rises under the pointer and rings out from a click.
+  float dp = distance(vec2(x, z), u_pointer.xy);
+  float lift = exp(-dp * dp / 9.0) * u_pointer.z;
+  float dr = distance(vec2(x, z), u_ripple.xy);
+  float front = u_ripple.z * 9.0;
+  float ring = u_ripple.w * exp(-u_ripple.z * 1.3) * exp(-(dr - front) * (dr - front) / 2.5);
+
+  float y = -2.0 + wave * (0.75 + u_energy * 0.5) + lift * 0.9 + ring * 0.7;
 
   // Camera: eased towards the pointer for a little parallax.
   vec3 p = vec3(x - u_mouse.x * 1.4, y - u_mouse.y * 0.5, z);
@@ -48,32 +62,66 @@ void main() {
     ? vec2(FOCAL / u_aspect, FOCAL)
     : vec2(FOCAL * 1.4, FOCAL * 1.4 * u_aspect);
   gl_Position = vec4(p.x * lens.x, p.y * lens.y, 0.0, depth);
-  gl_PointSize = clamp(3.4 * u_dpr * (FOCAL * 4.0 / depth), 0.0, 5.5 * u_dpr);
+
+  v_crest = smoothstep(0.55, 1.35, wave);
+  v_glow = clamp(lift + ring, 0.0, 1.0);
+  float size = 3.6 * u_dpr * (FOCAL * 4.0 / depth) * (1.0 + v_crest * 0.5 + v_glow * 1.3);
+  gl_PointSize = clamp(size, 0.0, 9.0 * u_dpr);
 
   // Fade out with distance, near the camera and at the sides.
   float fog = smoothstep(DEPTH + NEAR, DEPTH * 0.35, depth) * smoothstep(NEAR, NEAR + 1.5, depth);
   float side = 1.0 - smoothstep(WIDTH * 0.3, WIDTH * 0.5, abs(x));
   v_alpha = fog * side;
-  v_crest = smoothstep(0.55, 1.35, wave);
+  v_far = smoothstep(DEPTH * 0.25, DEPTH * 0.9, depth);
 }
 `;
 
 const FRAGMENT = /* glsl */ `
 precision mediump float;
+uniform vec3 u_tint;
 varying float v_alpha;
 varying float v_crest;
+varying float v_glow;
+varying float v_far;
 const vec3 BONE = vec3(0.925, 0.929, 0.902);
-const vec3 SIGNAL = vec3(0.133, 0.773, 0.369);
 
 void main() {
   vec2 d = gl_PointCoord - 0.5;
   float r = dot(d, d);
   if (r > 0.25) discard;
-  float soft = 1.0 - smoothstep(0.12, 0.25, r);
-  vec3 color = mix(BONE, SIGNAL, v_crest);
-  gl_FragColor = vec4(color, soft * v_alpha * mix(0.4, 1.0, v_crest));
+  // A bright core with a soft halo around it.
+  float core = 1.0 - smoothstep(0.015, 0.08, r);
+  float halo = 1.0 - smoothstep(0.08, 0.25, r);
+  float heat = clamp(v_crest + v_glow, 0.0, 1.0);
+  vec3 color = mix(BONE, u_tint, heat);
+  // Distance tints the field towards the section colour, like haze.
+  color = mix(color, u_tint * 0.8, v_far * 0.55);
+  float alpha = core * 0.85 + halo * 0.3 * (0.35 + heat);
+  gl_FragColor = vec4(color, alpha * v_alpha * mix(0.45, 1.0, heat));
 }
 `;
+
+// Each home-page section gives the field its own colour.
+const SECTION_TINTS: [string, string][] = [
+  ["home", "#22C55E"],
+  ["expertise", "#2EC4D6"],
+  ["work", "#4D8DFF"],
+  ["experience", "#A57BFF"],
+  ["education", "#FFB020"],
+  ["play", "#FF5CA8"],
+  ["contact", "#22C55E"],
+];
+const DEFAULT_TINT = "#22C55E";
+
+const rgb = (hex: string) =>
+  [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [
+    number,
+    number,
+    number,
+  ];
+
+const WIDTH = 46;
+const FOCAL = 1.6;
 
 function compile(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type)!;
@@ -87,6 +135,7 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 
 const Backdrop = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const aura = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = canvas.current;
@@ -129,6 +178,9 @@ const Backdrop = () => {
     const uScroll = u("u_scroll");
     const uEnergy = u("u_energy");
     const uMouse = u("u_mouse");
+    const uPointer = u("u_pointer");
+    const uRipple = u("u_ripple");
+    const uTint = u("u_tint");
     const uAspect = u("u_aspect");
     const uDpr = u("u_dpr");
 
@@ -137,21 +189,82 @@ const Backdrop = () => {
     gl.clearColor(0, 0, 0, 0);
 
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let aspect = 1;
     const resize = () => {
       el.width = Math.round(window.innerWidth * dpr);
       el.height = Math.round(window.innerHeight * dpr);
+      aspect = el.width / el.height;
       gl.viewport(0, 0, el.width, el.height);
-      gl.uniform1f(uAspect, el.width / el.height);
+      gl.uniform1f(uAspect, aspect);
       gl.uniform1f(uDpr, dpr);
     };
     resize();
 
-    const pointer = { x: 0, y: 0 };
-    const eased = { x: 0, y: 0, scroll: window.scrollY, energy: 0 };
-    const onMove = (e: PointerEvent) => {
-      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    const pointer = { x: 0, y: 0, moved: -Infinity };
+    const eased = {
+      x: 0,
+      y: 0,
+      scroll: window.scrollY,
+      velocity: 0,
+      energy: 0,
+      reach: 0, // strength of the lift under the pointer
+      ground: { x: 0, z: -20 },
+      tint: rgb(DEFAULT_TINT),
     };
+    const ripple = { x: 0, z: 0, start: -Infinity };
+    let lastY = window.scrollY;
+    // The field follows scroll *speed*, capped, so a long jump (a nav click,
+    // a flick of the wheel) glides at a steady pace instead of racing.
+    const MAX_SPEED = 900; // px of page scroll per second
+
+    // Where a screen point lands on the ground, undoing the vertex shader's
+    // camera (ignoring the waves). Null above the horizon.
+    const toGround = (sx: number, sy: number) => {
+      const lens =
+        aspect >= 1
+          ? [FOCAL / aspect, FOCAL]
+          : [FOCAL * 1.4, FOCAL * 1.4 * aspect];
+      const pitch = 0.24 + eased.y * 0.04;
+      const c = Math.cos(pitch);
+      const s = Math.sin(pitch);
+      // A camera-space ray (x, ry·D, −D), rotated back by the pitch.
+      const ry = sy / lens[1];
+      const k = ry * c - s; // camera-relative height gained per unit of depth
+      if (k >= -0.01) return null; // at or above the horizon
+      const depth = (-2 - eased.y * 0.5) / k; // where the ray meets y = −2
+      const x = (sx * depth) / lens[0] + eased.x * 1.4;
+      const z = depth * (-ry * s - c);
+      return Math.abs(x) < WIDTH / 2 ? { x, z } : null;
+    };
+
+    const ndc = (e: PointerEvent) => ({
+      x: (e.clientX / window.innerWidth) * 2 - 1,
+      y: -((e.clientY / window.innerHeight) * 2 - 1),
+    });
+    const onMove = (e: PointerEvent) => {
+      const p = ndc(e);
+      pointer.x = p.x;
+      pointer.y = p.y;
+      pointer.moved = performance.now();
+    };
+    const onDown = (e: PointerEvent) => {
+      const p = ndc(e);
+      const hit = toGround(p.x, p.y);
+      if (hit) Object.assign(ripple, { ...hit, start: performance.now() });
+    };
+
+    // Which section is in view, checked a few times a second.
+    let sectionTint = rgb(DEFAULT_TINT);
+    const pickTint = () => {
+      let hex = DEFAULT_TINT;
+      for (const [id, color] of SECTION_TINTS) {
+        const top = document.getElementById(id)?.getBoundingClientRect().top;
+        if (top !== undefined && top < window.innerHeight * 0.5) hex = color;
+      }
+      sectionTint = rgb(hex);
+    };
+    pickTint();
+    const tintTimer = window.setInterval(pickTint, 250);
 
     const draw = (time: number) => {
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -159,18 +272,33 @@ const Backdrop = () => {
       gl.uniform1f(uScroll, eased.scroll * 0.012);
       gl.uniform1f(uEnergy, eased.energy);
       gl.uniform2f(uMouse, eased.x, eased.y);
+      gl.uniform3f(uPointer, eased.ground.x, eased.ground.z, eased.reach);
+      const age = (performance.now() - ripple.start) / 1000;
+      gl.uniform4f(uRipple, ripple.x, ripple.z, age, age < 4 ? 1 : 0);
+      gl.uniform3f(uTint, ...eased.tint);
       gl.drawArrays(gl.POINTS, 0, cols * rows);
+    };
+
+    const paintAura = () => {
+      const [r, g, b] = eased.tint.map((v) => Math.round(v * 255));
+      if (aura.current)
+        aura.current.style.background = `radial-gradient(ellipse 60% 55% at 50% 45%, rgba(${r}, ${g}, ${b}, 0.13), transparent 70%)`;
     };
 
     if (prefersReducedMotion()) {
       // One still frame, redrawn only when the window changes size.
+      eased.tint = sectionTint;
+      paintAura();
       draw(0);
       const onResize = () => {
         resize();
         draw(0);
       };
       window.addEventListener("resize", onResize);
-      return () => window.removeEventListener("resize", onResize);
+      return () => {
+        clearInterval(tintTimer);
+        window.removeEventListener("resize", onResize);
+      };
     }
 
     let raf = 0;
@@ -181,12 +309,34 @@ const Backdrop = () => {
       const follow = 1 - Math.exp(-dt * 3);
       eased.x += (pointer.x - eased.x) * follow;
       eased.y += (pointer.y - eased.y) * follow;
-      const lastScroll = eased.scroll;
-      eased.scroll += (window.scrollY - eased.scroll) * (1 - Math.exp(-dt * 4));
-      // Fast scrolling swells the waves for a moment.
-      const speed = Math.abs(eased.scroll - lastScroll) / Math.max(dt, 1e-3);
-      eased.energy +=
-        (Math.min(speed / 2500, 1) - eased.energy) * (1 - Math.exp(-dt * 2));
+
+      // Lift the ground under a moving pointer; let it settle when it rests.
+      const hit = toGround(pointer.x, pointer.y);
+      const active = hit && now - pointer.moved < 2500;
+      if (hit) {
+        const f = 1 - Math.exp(-dt * 8);
+        eased.ground.x += (hit.x - eased.ground.x) * f;
+        eased.ground.z += (hit.z - eased.ground.z) * f;
+      }
+      eased.reach += ((active ? 1 : 0) - eased.reach) * (1 - Math.exp(-dt * 3));
+
+      const y = window.scrollY;
+      const raw = (y - lastY) / Math.max(dt, 1e-3);
+      lastY = y;
+      const capped = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, raw));
+      eased.velocity += (capped - eased.velocity) * (1 - Math.exp(-dt * 5));
+      eased.scroll += eased.velocity * dt;
+      // Scrolling swells the waves a little, never more than the cap allows.
+      const energy = (Math.abs(eased.velocity) / MAX_SPEED) * 0.6;
+      eased.energy += (energy - eased.energy) * (1 - Math.exp(-dt * 2));
+
+      // Drift towards the current section's colour.
+      const tf = 1 - Math.exp(-dt * 2);
+      eased.tint = eased.tint.map(
+        (v, i) => v + (sectionTint[i] - v) * tf,
+      ) as typeof eased.tint;
+      paintAura();
+
       draw(now / 1000);
       raf = requestAnimationFrame(tick);
     };
@@ -194,18 +344,21 @@ const Backdrop = () => {
 
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      clearInterval(tintTimer);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
     };
   }, []);
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
       <canvas ref={canvas} className="size-full" />
-      {/* Aura: a soft green glow rising off the horizon */}
-      <div className="absolute inset-x-0 top-[28%] h-[50vh] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,rgba(34,197,94,0.12),transparent_70%)]" />
+      {/* Aura: a soft glow rising off the horizon, in the section's colour */}
+      <div ref={aura} className="absolute inset-x-0 top-[28%] h-[50vh]" />
       {/* Keep the top of the screen quiet so text stays easy to read */}
       <div className="absolute inset-x-0 top-0 h-[22vh] bg-gradient-to-b from-ink via-ink/50 to-transparent" />
     </div>

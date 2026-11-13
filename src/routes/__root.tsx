@@ -5,6 +5,7 @@ import Backdrop from "@/components/backdrop";
 import CursorChat from "@/components/cursor-chat";
 import Header from "@/components/header";
 import InspectOverlay from "@/components/inspect";
+import SoundHint from "@/components/sound-hint";
 import SwarmCursors from "@/components/swarm-cursors";
 import {
   gsap,
@@ -61,6 +62,7 @@ const RootLayout = () => {
       <SwarmCursors />
       <CursorChat />
       <InspectOverlay />
+      <SoundHint />
       {paletteLoaded && (
         <Suspense fallback={null}>
           <CommandPalette />

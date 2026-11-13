@@ -14,6 +14,13 @@ import { t, useT } from "@/lib/i18n";
 import { blip, click } from "@/lib/sound";
 import { isTyping, readSetting, writeSetting } from "@/lib/store";
 import { swarm } from "@/lib/swarm";
+import {
+  drawCursor,
+  drawLabel,
+  INK,
+  SIGNAL,
+  SKILLS,
+} from "@/components/games/canvas";
 
 // Cursor Snake: the snake is a conga line of cursors on the dotted canvas.
 // Each skill you eat joins the tail as a cursor in its own colour.
@@ -45,40 +52,6 @@ const copy = {
   exitFullscreen: t("Exit fullscreen", "Бүтэн дэлгэцээс гарах"),
 };
 
-// Tools from my projects (NTV, APU OnTap, GS25, Shunkhlai, SG.MN, Takhi).
-const SKILLS = [
-  ["React", "#61DAFB"],
-  ["Next.js", "#F2F2EA"],
-  ["TypeScript", "#4D8DFF"],
-  ["JavaScript", "#F7DF1E"],
-  ["Tailwind", "#38BDF8"],
-  ["TanStack Query", "#FF6B6B"],
-  ["TanStack Router", "#2EC4D6"],
-  ["Zustand", "#FFB020"],
-  ["Jotai", "#E2E8F0"],
-  ["Redux", "#A57BFF"],
-  ["Node.js", "#7BD88F"],
-  ["SQL", "#FFB86C"],
-  ["Vite", "#BD93F9"],
-  ["Turborepo", "#FF5CA8"],
-  ["GSAP", "#A3E635"],
-  ["Framer Motion", "#F472B6"],
-  ["Mantine", "#5C9DFF"],
-  ["MUI", "#64B5F6"],
-  ["Ant Design", "#FF7A7A"],
-  ["shadcn/ui", "#D4D4D8"],
-  ["React Hook Form", "#EC5990"],
-  ["Zod", "#6E9BF0"],
-  ["Axios", "#A78BFA"],
-  ["next-intl", "#34D399"],
-  ["i18next", "#4FD1C5"],
-  ["Tiptap", "#FDBA74"],
-  ["Video.js", "#FF7A45"],
-  ["Recharts", "#22D3EE"],
-  ["Leaflet", "#86EFAC"],
-  ["Firebase", "#FFCA28"],
-] as const;
-
 type Point = { x: number; y: number };
 type Segment = Point & { color: string };
 type Phase = "ready" | "playing" | "paused" | "over";
@@ -94,14 +67,7 @@ const DIRS: Record<string, Point> = {
   KeyD: { x: 1, y: 0 },
 };
 
-const HEAD = "#22C55E";
-const INK = "#0d0f0c";
-// The swarm's cursor shape, drawn in an 18 × 20 box with the tip at (2, 2).
-const ARROW = new Path2D(
-  "M2 2 L2 16.4 L6.1 12.6 L8.9 18.6 L11.7 17.3 L8.9 11.4 L14.6 11.1 Z",
-);
-// The tip points up-left; rotate by this much less to face a direction.
-const ARROW_BASE = Math.atan2(-1, -1);
+const HEAD = SIGNAL;
 
 const tickFor = (score: number) => Math.max(65, 135 - score * 4);
 
@@ -327,51 +293,8 @@ const Snake = () => {
   useEffect(() => {
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
-    const font =
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--font-mono",
-      ) || "monospace";
     let raf = 0;
     let last = performance.now();
-
-    const label = (
-      text: string,
-      x: number,
-      y: number,
-      color: string,
-      w: number,
-    ) => {
-      ctx.font = `500 11px ${font}`;
-      const tw = ctx.measureText(text).width + 12;
-      const lx = Math.max(2, Math.min(x, w - tw - 2));
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.roundRect(lx, y, tw, 17, 8.5);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.fillText(text, lx + 6, y + 12.5);
-    };
-
-    const arrow = (
-      cx: number,
-      cy: number,
-      dir: Point,
-      color: string,
-      scale: number,
-    ) => {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(Math.atan2(dir.y, dir.x) - ARROW_BASE);
-      ctx.scale(scale, scale);
-      ctx.translate(-8, -10);
-      ctx.fillStyle = color;
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.2;
-      ctx.lineJoin = "round";
-      ctx.fill(ARROW);
-      ctx.stroke(ARROW);
-      ctx.restore();
-    };
 
     const draw = (now: number) => {
       const g = game.current;
@@ -401,7 +324,8 @@ const Snake = () => {
       ctx.lineWidth = 1.5;
       ctx.fillRect(fx - s / 2, fy - s / 2, s, s);
       ctx.strokeRect(fx - s / 2, fy - s / 2, s, s);
-      label(
+      drawLabel(
+        ctx,
         name,
         fx - 6,
         g.food.y < 1 ? fy + cell * 0.5 : fy - cell * 0.5 - 17,
@@ -417,16 +341,25 @@ const Snake = () => {
         const y = (from.y + (seg.y - from.y) * k) * cell + cell / 2;
         const ahead =
           i === 0 ? { x: seg.x + g.dir.x, y: seg.y + g.dir.y } : g.snake[i - 1];
-        const dir = { x: ahead.x - seg.x, y: ahead.y - seg.y };
-        arrow(
+        const d = { x: ahead.x - seg.x, y: ahead.y - seg.y };
+        const dir = d.x || d.y ? d : g.dir;
+        drawCursor(
+          ctx,
           x,
           y,
-          dir.x || dir.y ? dir : g.dir,
           seg.color,
           (cell / 22) * (i === 0 ? 1.25 : 0.95),
+          Math.atan2(dir.y, dir.x),
         );
         if (i === 0)
-          label(tr(copy.you), x + cell * 0.3, y + cell * 0.35, HEAD, w);
+          drawLabel(
+            ctx,
+            tr(copy.you),
+            x + cell * 0.3,
+            y + cell * 0.35,
+            HEAD,
+            w,
+          );
       }
     };
 
