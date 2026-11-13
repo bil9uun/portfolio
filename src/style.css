@@ -90,7 +90,7 @@ html.inspecting * {
 }
 
 
-/* Party mode (Konami code): the name hops in every colour. */
+/* Party mode (a secret word): the name hops in every colour. */
 .party [data-letter] {
   color: hsl(calc(var(--i) * 40) 90% 65%);
   animation: party-hop 0.45s ease-in-out infinite alternate;

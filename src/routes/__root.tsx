@@ -16,7 +16,7 @@ import {
   ScrollTrigger,
   useGSAP,
 } from "@/lib/gsap";
-import "@/lib/party"; // listens for the Konami code
+import "@/lib/party"; // listens for the secret words
 import { REBUILT } from "@/lib/replay";
 import {
   isTyping,

@@ -28,9 +28,12 @@ export const navItems = [
 ];
 
 export const sectionTitles = {
-  expertise: t("My expertise", "Миний ур чадвар"),
-  work: t("Selected work", "Сонгосон төслүүд"),
-  experience: t("From medicine to code", "Анагаахаас код руу"),
+  expertise: t("Areas of expertise", "Мэргэшсэн чиглэл"),
+  work: t("Projects", "Төслүүд"),
+  experience: t(
+    "From medicine to software engineering",
+    "Анагаах ухаанаас програм хангамж руу",
+  ),
   play: t("Take a break", "Жаахан амар"),
   afk: t("When I'm not coding", "Код бичээгүй үедээ"),
   contact: t("Have a project in mind?", "Хамтран ажиллах санаа байна уу?"),
@@ -55,24 +58,24 @@ export const expertise: Expertise[] = [
     icon: Laptop,
     title: t("Software engineering", "Програм хангамжийн инженерчлэл"),
     body: t(
-      "Full stack in TypeScript: React and Next.js on the front, Node.js and SQL on the back. Functional and object-oriented styles.",
-      "TypeScript дээр full stack: фронтод React, Next.js, бэкэндэд Node.js, SQL. Функциональ болон объект хандлагат аль алинаар нь бичдэг.",
+      "Full-stack development in TypeScript, with React and Next.js on the client and Node.js on the server, working with both SQL and NoSQL (MongoDB) databases. Experienced in both functional and object-oriented programming.",
+      "TypeScript дээр full stack хөгжүүлэлт хийдэг: клиент талд React, Next.js, сервер талд Node.js, өгөгдлийн санд SQL болон NoSQL (MongoDB). Функциональ болон объект хандалтат програмчлалын аль алинд туршлагатай.",
     ),
   },
   {
     icon: Code,
     title: t("Frontend development", "Фронтенд хөгжүүлэлт"),
     body: t(
-      "Over 2 years building React and Next.js apps: admin panels, dashboards and news sites for GS25, APU, NTV and Shunkhlai.",
-      "2 гаруй жил React, Next.js дээр GS25, APU, NTV, Шунхлай зэрэг байгууллагад админ панел, дашбоард, мэдээний сайт хөгжүүлсэн.",
+      "More than two years of professional experience building React and Next.js applications, including admin panels, dashboards and news platforms for organisations such as GS25, APU, NTV and Shunkhlai Group.",
+      "React, Next.js дээр хоёр жилээс дээш хугацаанд мэргэжлийн түвшинд ажиллаж, GS25, APU, NTV, Шунхлай Групп зэрэг байгууллагын админ панел, дашбоард, мэдээний платформыг хөгжүүлсэн.",
     ),
   },
   {
     icon: BriefcaseMedical,
-    title: t("Medical background", "Анагаахын суурь"),
+    title: t("Medical background", "Анагаахын боловсрол"),
     body: t(
-      "Six years as a medical student at MNUMS. I listen first, work carefully under pressure and design for the people who use the product.",
-      "АШУҮИС-д 6 жил анагаах ухаан суралцсан. Эхлээд сонсож, дарамттай үед ч нягт ажиллаж, хэрэглэгчдээ зориулж бүтээдэг.",
+      "Six years of medical education at the Mongolian National University of Medical Sciences. That training shapes how I work: careful listening, precision under pressure and a focus on the people who use the product.",
+      "Анагаахын Шинжлэх Ухааны Үндэсний Их Сургуульд 6 жил анагаах ухаанаар суралцсан. Энэ сургалт ажлын арга барилд минь шингэсэн: анхааралтай сонсох, ачаалал ихтэй үед ч нягт нямбай ажиллах, хэрэглэгчийг төвд тавих.",
     ),
   },
 ];
@@ -450,8 +453,8 @@ export const experience: TimelineItem[] = [
     role: t("Frontend developer", "Фронтенд хөгжүүлэгч"),
     org: "Zero technology LLC",
     summary: t(
-      "Build admin panels, dashboards and websites end to end with React, Next.js and Node.js.",
-      "React, Next.js, Node.js ашиглан админ панел, дашбоард, вэбсайтыг эхнээс нь дуустал хөгжүүлдэг.",
+      "Develop and maintain admin panels, dashboards and websites end to end with React, Next.js and Node.js.",
+      "React, Next.js, Node.js ашиглан админ панел, дашбоард, вэбсайтыг эхнээс нь бүрэн хөгжүүлж, засвар үйлчилгээг нь хариуцдаг.",
     ),
     tags: ["React", "Next.js", "TypeScript", "Node.js", "SQL"],
   },
@@ -461,8 +464,8 @@ export const experience: TimelineItem[] = [
     role: t("Frontend developer", "Фронтенд хөгжүүлэгч"),
     org: "Prohub LLC",
     summary: t(
-      "Three months building frontend features in React.",
-      "Гурван сар React дээр фронтенд хэсгүүд хөгжүүлсэн.",
+      "Developed frontend features in React over a three-month engagement.",
+      "Гурван сарын хугацаанд React дээр фронтендийн функцуудыг хөгжүүлсэн.",
     ),
     tags: ["React", "JavaScript"],
   },
@@ -483,12 +486,12 @@ export const education: Education[] = [
     period: "2023 — 2024",
     span: [2023, 2024],
     school: t("Pinecone Academy", "Pinecone Академи"),
-    credential: t("Full stack development", "Full stack хөгжүүлэлт"),
-    level: t("Professional program", "Мэргэшүүлэх хөтөлбөр"),
+    credential: t("Full-stack development", "Full stack хөгжүүлэлт"),
+    level: t("Professional training program", "Мэргэшүүлэх сургалтын хөтөлбөр"),
     gpa: 4.0,
     note: t(
-      "Intensive program in JavaScript, React, Node.js and SQL.",
-      "JavaScript, React, Node.js, SQL-ийн эрчимжүүлсэн хөтөлбөр.",
+      "Intensive program covering JavaScript, React, Node.js and SQL.",
+      "JavaScript, React, Node.js, SQL-ийг хамарсан эрчимжүүлсэн сургалтын хөтөлбөр.",
     ),
   },
   {
@@ -498,7 +501,7 @@ export const education: Education[] = [
       "Mongolian National University of Medical Sciences",
       "Анагаахын Шинжлэх Ухааны Үндэсний Их Сургууль",
     ),
-    credential: t("Medical doctor", "Хүний их эмч"),
+    credential: t("Medical Doctor", "Хүний их эмч"),
     level: t("Bachelor's degree", "Бакалавр"),
     gpa: 3.2,
   },
@@ -510,8 +513,8 @@ export const education: Education[] = [
     level: t("Gifted and talented school", "Гоц авьяастны сургууль"),
     gpa: 3.9,
     note: t(
-      "Represented the school in math, physics and chemistry olympiads and won around 15 medals.",
-      "Математик, физик, химийн олимпиадад сургуулиа төлөөлөн оролцож 15 орчим медаль авсан.",
+      "Represented the school in mathematics, physics and chemistry olympiads, winning approximately 15 medals.",
+      "Математик, физик, химийн олимпиадад сургуулиа төлөөлөн оролцож, 15 орчим медаль хүртсэн.",
     ),
   },
 ];

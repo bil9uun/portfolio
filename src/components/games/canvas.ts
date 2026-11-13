@@ -92,6 +92,7 @@ export const SKILLS = [
   ["Redux", "#A57BFF"],
   ["Node.js", "#7BD88F"],
   ["SQL", "#FFB86C"],
+  ["MongoDB", "#47A248"],
   ["Vite", "#BD93F9"],
   ["Turborepo", "#FF5CA8"],
   ["GSAP", "#A3E635"],

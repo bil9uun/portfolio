@@ -70,10 +70,13 @@ const YEARS = Array.from(
 
 const copy = {
   intro: t(
-    "Six years of medical school, then a full stack program and frontend work. Drag the playhead or pick a bar.",
-    "Анагаахын 6 жил, дараа нь full stack хөтөлбөр, фронтенд ажил. Playhead-ийг чирж эсвэл мөр сонгоорой.",
+    "After six years of medical education, I moved into software engineering through an intensive full-stack program and have worked as a frontend developer since. Drag the playhead or select a period to see the details.",
+    "Анагаах ухаанд 6 жил суралцсаны дараа full stack сургалтын хөтөлбөрөөр дамжуулан програм хангамжийн салбарт шилжиж, түүнээс хойш фронтенд хөгжүүлэгчээр ажиллаж байна. Дэлгэрэнгүйг харахын тулд playhead-ийг чирэх эсвэл хугацааг сонгоно уу.",
   ),
-  lanes: { study: t("Study", "Суралцсан"), work: t("Work", "Ажилласан") },
+  lanes: {
+    study: t("Education", "Боловсрол"),
+    work: t("Work", "Ажлын туршлага"),
+  },
   now: t("Now", "Одоо"),
   years: t("years", "жил"),
   months: t("months", "сар"),
@@ -260,10 +263,7 @@ const CareerSection = () => {
           <p className="text-lg leading-relaxed text-fog">{tr(copy.intro)}</p>
         </Build>
 
-        <Build
-          label="Frame · timeline"
-          className="mt-16 md:mt-24"
-        >
+        <Build label="Frame · timeline" className="mt-16 md:mt-24">
           <div>
             <div
               ref={track}

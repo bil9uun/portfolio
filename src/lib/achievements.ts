@@ -35,9 +35,12 @@ export const achievements: Achievement[] = [
     ),
   },
   {
-    id: "konami",
-    title: t("Old school", "Хуучны тоглогч"),
-    hint: t("A famous cheat code", "Алдартай cheat code"),
+    id: "konami", // kept: unlocks already saved in browsers use this id
+    title: t("Secret word", "Нууц үг"),
+    hint: t(
+      "Type a name from this site, anywhere",
+      "Энэ сайт дээрх нэрийг хаана ч хамаагүй бич",
+    ),
   },
   {
     id: "inspect",

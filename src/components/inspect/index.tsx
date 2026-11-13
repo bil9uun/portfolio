@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { ui, useT } from "@/lib/i18n";
+import { typingSecret } from "@/lib/party";
 import { inspectMode, isTyping, useStore } from "@/lib/store";
 
 type Box = { top: number; right: number; bottom: number; left: number };
@@ -92,8 +93,10 @@ const InspectOverlay = () => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target)) return;
-      if (e.key === "i" || e.key === "I") inspectMode.set(!inspectMode.get());
-      else if (e.key === "Escape") inspectMode.set(false);
+      if (e.key === "i" || e.key === "I") {
+        // The "i" in a secret word like "bilguun" isn't a request to inspect.
+        if (!typingSecret()) inspectMode.set(!inspectMode.get());
+      } else if (e.key === "Escape") inspectMode.set(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

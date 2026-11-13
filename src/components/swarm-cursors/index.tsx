@@ -172,7 +172,7 @@ const SwarmCursors = () => {
           ty = job.y;
           k = 260;
         } else if (party) {
-          // Konami code: a fast, pulsing ring round the middle of the screen.
+          // Party mode: a fast, pulsing ring round the middle of the screen.
           const ang = (i / n) * Math.PI * 2 + t * 2.4;
           const r =
             Math.min(vw(), vh()) * 0.3 * (1 + 0.3 * Math.sin(t * 5 + i));

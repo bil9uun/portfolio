@@ -29,7 +29,7 @@ const copy = {
   ),
   strengths: t("Strengths", "Давуу тал"),
   experience: t("Experience", "Ажлын туршлага"),
-  projects: t("Selected projects", "Сонгосон төслүүд"),
+  projects: t("Projects", "Төслүүд"),
   education: t("Education", "Боловсрол"),
   skills: t("Skills", "Ур чадвар"),
   contact: t("Contact", "Холбоо барих"),
