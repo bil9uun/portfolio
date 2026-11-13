@@ -25,3 +25,26 @@ export function scrollToTop(smooth = true) {
   if (smoother) smoother.scrollTo(0, smooth);
   else window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
 }
+
+// Runs `play` once, the first time `trigger` scrolls past `start`.
+// Not `once: true`: a trigger that is already past when created (e.g. after
+// a replay) would kill itself in the middle of ScrollTrigger's refresh and
+// crash it. This one is killed a frame later instead.
+export function onceInView(
+  trigger: Element,
+  play: (self: ScrollTrigger) => void,
+  start = "top 75%",
+) {
+  let done = false;
+  const st = ScrollTrigger.create({
+    trigger,
+    start,
+    onEnter: (self) => {
+      if (done) return;
+      done = true;
+      requestAnimationFrame(() => st.kill());
+      play(self);
+    },
+  });
+  return st;
+}

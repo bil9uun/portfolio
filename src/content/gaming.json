@@ -1,0 +1,576 @@
+{
+  "updated": "2026-11-13",
+  "faceit": {
+    "nickname": "Hopi9",
+    "level": 9,
+    "elo": 1804,
+    "region": "SEA",
+    "regionRank": 11209,
+    "memberSince": 2016,
+    "url": "https://www.faceit.com/en/players/Hopi9",
+    "lifetime": {
+      "matches": 1295,
+      "wins": 643,
+      "winRate": 50,
+      "kd": 1.08,
+      "headshots": 47,
+      "adr": 77.97,
+      "longestStreak": 9,
+      "recent": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "L"
+      ]
+    },
+    "matches": [
+      {
+        "date": "2026-11-12",
+        "map": "cache",
+        "win": false,
+        "score": [
+          8,
+          13
+        ],
+        "kills": 14,
+        "deaths": 16,
+        "assists": 7,
+        "kd": 0.88,
+        "headshots": 57,
+        "adr": 87.7,
+        "elo": 1804,
+        "delta": -22
+      },
+      {
+        "date": "2026-11-12",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          10
+        ],
+        "kills": 23,
+        "deaths": 14,
+        "assists": 4,
+        "kd": 1.64,
+        "headshots": 39,
+        "adr": 95.8,
+        "elo": 1826,
+        "delta": 24
+      },
+      {
+        "date": "2026-11-12",
+        "map": "mirage",
+        "win": false,
+        "score": [
+          7,
+          13
+        ],
+        "kills": 13,
+        "deaths": 16,
+        "assists": 2,
+        "kd": 0.81,
+        "headshots": 31,
+        "adr": 65.8,
+        "elo": 1802,
+        "delta": -23
+      },
+      {
+        "date": "2026-11-06",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          0
+        ],
+        "kills": 10,
+        "deaths": 7,
+        "assists": 8,
+        "kd": 1.43,
+        "headshots": 60,
+        "adr": 104.3,
+        "elo": 1825,
+        "delta": 27
+      },
+      {
+        "date": "2026-11-06",
+        "map": "nuke",
+        "win": true,
+        "score": [
+          13,
+          8
+        ],
+        "kills": 15,
+        "deaths": 13,
+        "assists": 2,
+        "kd": 1.15,
+        "headshots": 47,
+        "adr": 76.3,
+        "elo": 1798,
+        "delta": 26
+      },
+      {
+        "date": "2026-11-03",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          5
+        ],
+        "kills": 15,
+        "deaths": 11,
+        "assists": 7,
+        "kd": 1.36,
+        "headshots": 40,
+        "adr": 98.1,
+        "elo": 1772,
+        "delta": 21
+      },
+      {
+        "date": "2026-11-03",
+        "map": "dust2",
+        "win": false,
+        "score": [
+          10,
+          13
+        ],
+        "kills": 13,
+        "deaths": 17,
+        "assists": 6,
+        "kd": 0.76,
+        "headshots": 62,
+        "adr": 63.4,
+        "elo": 1751,
+        "delta": -20
+      },
+      {
+        "date": "2026-11-02",
+        "map": "dust2",
+        "win": false,
+        "score": [
+          14,
+          16
+        ],
+        "kills": 29,
+        "deaths": 21,
+        "assists": 6,
+        "kd": 1.38,
+        "headshots": 34,
+        "adr": 95.4,
+        "elo": 1771,
+        "delta": -22
+      },
+      {
+        "date": "2026-11-02",
+        "map": "ancient",
+        "win": false,
+        "score": [
+          9,
+          13
+        ],
+        "kills": 14,
+        "deaths": 18,
+        "assists": 6,
+        "kd": 0.78,
+        "headshots": 64,
+        "adr": 73.5,
+        "elo": 1793,
+        "delta": -26
+      },
+      {
+        "date": "2026-11-01",
+        "map": "inferno",
+        "win": true,
+        "score": [
+          13,
+          9
+        ],
+        "kills": 14,
+        "deaths": 16,
+        "assists": 7,
+        "kd": 0.88,
+        "headshots": 57,
+        "adr": 83,
+        "elo": 1819,
+        "delta": 25
+      },
+      {
+        "date": "2026-11-01",
+        "map": "ancient",
+        "win": true,
+        "score": [
+          19,
+          17
+        ],
+        "kills": 33,
+        "deaths": 23,
+        "assists": 6,
+        "kd": 1.43,
+        "headshots": 55,
+        "adr": 94.6,
+        "elo": 1794,
+        "delta": 28
+      },
+      {
+        "date": "2026-11-01",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          8
+        ],
+        "kills": 17,
+        "deaths": 11,
+        "assists": 0,
+        "kd": 1.55,
+        "headshots": 53,
+        "adr": 80,
+        "elo": 1766,
+        "delta": 29
+      },
+      {
+        "date": "2026-10-28",
+        "map": "ancient",
+        "win": false,
+        "score": [
+          10,
+          13
+        ],
+        "kills": 12,
+        "deaths": 19,
+        "assists": 6,
+        "kd": 0.63,
+        "headshots": 50,
+        "adr": 74.8,
+        "elo": 1737,
+        "delta": -27
+      },
+      {
+        "date": "2026-10-28",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          8
+        ],
+        "kills": 6,
+        "deaths": 12,
+        "assists": 4,
+        "kd": 0.5,
+        "headshots": 67,
+        "adr": 42.4,
+        "elo": 1764,
+        "delta": 22
+      },
+      {
+        "date": "2026-10-28",
+        "map": "ancient",
+        "win": false,
+        "score": [
+          5,
+          13
+        ],
+        "kills": 16,
+        "deaths": 13,
+        "assists": 3,
+        "kd": 1.23,
+        "headshots": 44,
+        "adr": 93.4,
+        "elo": 1742,
+        "delta": -23
+      },
+      {
+        "date": "2026-10-28",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          16,
+          12
+        ],
+        "kills": 26,
+        "deaths": 23,
+        "assists": 5,
+        "kd": 1.13,
+        "headshots": 46,
+        "adr": 103,
+        "elo": 1765,
+        "delta": 29
+      },
+      {
+        "date": "2026-10-26",
+        "map": "cache",
+        "win": false,
+        "score": [
+          4,
+          13
+        ],
+        "kills": 7,
+        "deaths": 14,
+        "assists": 2,
+        "kd": 0.5,
+        "headshots": 14,
+        "adr": 46.6,
+        "elo": 1736,
+        "delta": -26
+      },
+      {
+        "date": "2026-10-26",
+        "map": "ancient",
+        "win": true,
+        "score": [
+          13,
+          11
+        ],
+        "kills": 13,
+        "deaths": 16,
+        "assists": 7,
+        "kd": 0.81,
+        "headshots": 62,
+        "adr": 66.7,
+        "elo": 1762,
+        "delta": 23
+      },
+      {
+        "date": "2026-10-26",
+        "map": "cache",
+        "win": true,
+        "score": [
+          13,
+          6
+        ],
+        "kills": 20,
+        "deaths": 10,
+        "assists": 6,
+        "kd": 2,
+        "headshots": 30,
+        "adr": 116.9,
+        "elo": 1739,
+        "delta": 27
+      },
+      {
+        "date": "2026-10-26",
+        "map": "ancient",
+        "win": true,
+        "score": [
+          13,
+          10
+        ],
+        "kills": 13,
+        "deaths": 14,
+        "assists": 4,
+        "kd": 0.93,
+        "headshots": 38,
+        "adr": 63.7,
+        "elo": 1712,
+        "delta": 24
+      },
+      {
+        "date": "2026-10-26",
+        "map": "nuke",
+        "win": true,
+        "score": [
+          13,
+          11
+        ],
+        "kills": 16,
+        "deaths": 17,
+        "assists": 6,
+        "kd": 0.94,
+        "headshots": 62,
+        "adr": 80.7,
+        "elo": 1688,
+        "delta": 24
+      },
+      {
+        "date": "2026-10-25",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          5
+        ],
+        "kills": 10,
+        "deaths": 9,
+        "assists": 8,
+        "kd": 1.11,
+        "headshots": 60,
+        "adr": 81.9,
+        "elo": 1664,
+        "delta": 18
+      },
+      {
+        "date": "2026-10-25",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          7
+        ],
+        "kills": 22,
+        "deaths": 9,
+        "assists": 7,
+        "kd": 2.44,
+        "headshots": 64,
+        "adr": 119.7,
+        "elo": 1646,
+        "delta": 23
+      },
+      {
+        "date": "2026-10-25",
+        "map": "mirage",
+        "win": false,
+        "score": [
+          9,
+          13
+        ],
+        "kills": 14,
+        "deaths": 18,
+        "assists": 5,
+        "kd": 0.78,
+        "headshots": 64,
+        "adr": 68.6,
+        "elo": 1623,
+        "delta": -18
+      },
+      {
+        "date": "2026-10-25",
+        "map": "nuke",
+        "win": false,
+        "score": [
+          8,
+          13
+        ],
+        "kills": 8,
+        "deaths": 15,
+        "assists": 5,
+        "kd": 0.53,
+        "headshots": 50,
+        "adr": 55.9,
+        "elo": 1641,
+        "delta": -22
+      },
+      {
+        "date": "2026-10-25",
+        "map": "inferno",
+        "win": true,
+        "score": [
+          13,
+          11
+        ],
+        "kills": 17,
+        "deaths": 14,
+        "assists": 3,
+        "kd": 1.21,
+        "headshots": 71,
+        "adr": 80.4,
+        "elo": 1663,
+        "delta": 27
+      },
+      {
+        "date": "2026-10-24",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          9
+        ],
+        "kills": 15,
+        "deaths": 15,
+        "assists": 5,
+        "kd": 1,
+        "headshots": 80,
+        "adr": 76.1,
+        "elo": 1636,
+        "delta": 28
+      },
+      {
+        "date": "2026-10-22",
+        "map": "cache",
+        "win": false,
+        "score": [
+          6,
+          13
+        ],
+        "kills": 13,
+        "deaths": 14,
+        "assists": 1,
+        "kd": 0.93,
+        "headshots": 62,
+        "adr": 71.1,
+        "elo": 1608,
+        "delta": -21
+      },
+      {
+        "date": "2026-10-22",
+        "map": "anubis",
+        "win": true,
+        "score": [
+          13,
+          11
+        ],
+        "kills": 19,
+        "deaths": 20,
+        "assists": 7,
+        "kd": 0.95,
+        "headshots": 42,
+        "adr": 88.3,
+        "elo": 1629,
+        "delta": 27
+      },
+      {
+        "date": "2026-10-22",
+        "map": "dust2",
+        "win": true,
+        "score": [
+          13,
+          11
+        ],
+        "kills": 18,
+        "deaths": 15,
+        "assists": 4,
+        "kd": 1.2,
+        "headshots": 33,
+        "adr": 65.7,
+        "elo": 1602,
+        "delta": 25
+      }
+    ]
+  },
+  "steam": {
+    "persona": "hopie",
+    "avatar": "https://avatars.fastly.steamstatic.com/71b8efac42e709bebe1df82021c1a7bbcd38fd54_medium.jpg",
+    "url": "https://steamcommunity.com/id/bil9uun",
+    "level": 23,
+    "memberSince": 2017,
+    "vacBanned": false,
+    "cs2Hours": 4260,
+    "recentHours": 35.1,
+    "badges": 20,
+    "games": 7,
+    "friends": 193,
+    "recent": [
+      {
+        "name": "Dota 2",
+        "hours": 453,
+        "lastPlayed": "2026-11-12",
+        "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_184x69.jpg",
+        "url": "https://store.steampowered.com/app/570"
+      },
+      {
+        "name": "Counter-Strike 2",
+        "hours": 4260,
+        "lastPlayed": "2026-11-12",
+        "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/capsule_184x69.jpg",
+        "url": "https://store.steampowered.com/app/730"
+      },
+      {
+        "name": "Apex Legends",
+        "hours": 371,
+        "lastPlayed": "2026-11-11",
+        "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/capsule_184x69.jpg",
+        "url": "https://store.steampowered.com/app/1172470"
+      }
+    ]
+  }
+}

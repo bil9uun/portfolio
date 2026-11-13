@@ -1,70 +1,55 @@
-# React + TypeScript + Vite
+# B.Bilguun — portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A bilingual (English / Mongolian) portfolio where a swarm of multiplayer-style
+cursors draws every part of the page into place.
 
-Currently, two official plugins are available:
+React 19 · Vite · TypeScript · TanStack Router · Tailwind CSS v4 · GSAP
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Scripts
 
-## Expanding the ESLint configuration
+| Command           | What it does                                                  |
+| ----------------- | ------------------------------------------------------------- |
+| `bun dev`         | Start the dev server                                          |
+| `bun run build`   | Refresh the gaming stats, type-check and build to `dist/`     |
+| `bun run gaming`  | Refresh `src/content/gaming.json` from FACEIT and Steam only  |
+| `bun run lint`    | ESLint                                                        |
+| `bun run preview` | Serve the built site                                          |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Structure
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  main.tsx              entry: router and global styles
+  routes/               pages (TanStack file routes; routeTree.gen.ts is generated)
+  sections/             the home page, one file or folder per section
+    expertise/          section + the skill pile
+    career/             section + GPA meter
+    afk/                FACEIT and Steam HUD, split into its panels
+  components/
+    layout/             header, footer, 3D backdrop, swarm cursors, section heading
+    overlays/           terminal, command palette, inspect, cursor chat, toasts
+    ui/                 Build (the cursor-drawn frame), Heading, BackLink, WaveText,
+                        shared class names (styles.ts)
+    illustrations/      top-down SVG drawings of the gear (the /uses thumbnails)
+    desk-3d/            3D desks on the home page and the 3D model cards on /uses
+                        (React Three Fiber, low-poly models at real size)
+  games/                the arcade: one file per game, plus registry and helpers
+  content/              everything the site says: portfolio, skills, uses, gaming stats
+  lib/                  framework glue: i18n, tiny stores, gsap, sound, swarm state,
+                        achievements, party mode, tilt
+  hooks/                React hooks
+  styles/globals.css    Tailwind theme tokens and global CSS
+scripts/gaming.mjs      build-time snapshot of FACEIT and Steam stats
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Conventions
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# portfolio
+- **Content lives in `src/content/`.** All visible copy is bilingual, written
+  as `t(english, mongolian)`; text that reads the same in both is `same(text)`.
+- **A folder only when there is more than one file.** Single-file components
+  are plain files (`components/layout/header.tsx`).
+- **Wrap anything that should be drawn in by the cursors in `<Build>`**; its
+  frame fits the content automatically.
+- **Scroll-triggered one-off animations use `onceInView()`** from `lib/gsap`.
+- **Fixed-position UI is portalled or rendered outside `#smooth-content`**,
+  which ScrollSmoother transforms.

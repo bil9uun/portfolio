@@ -1,22 +1,24 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Printer } from "lucide-react";
-import Build from "@/components/build";
-import { SKILLS } from "@/components/games/canvas";
+import { createFileRoute } from "@tanstack/react-router";
+import { Printer } from "lucide-react";
+import Build from "@/components/ui/build";
+import { SKILLS } from "@/content/skills";
 import {
   education,
   experience,
   expertise,
   profile,
   projects,
-} from "@/data/portfolio";
+} from "@/content/portfolio";
 import { unlock } from "@/lib/achievements";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { t, ui, useT } from "@/lib/i18n";
 import { usePageReady } from "@/lib/navigation";
 import { click } from "@/lib/sound";
 import { releaseCursor, requestCursor } from "@/lib/swarm";
+import { pillButton } from "@/components/ui/styles";
+import BackLink from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/cv")({ component: CvPage });
 
@@ -105,21 +107,13 @@ function CvPage() {
         data-print-hide
         className="mx-auto mb-8 flex max-w-[820px] flex-wrap items-center justify-between gap-4"
       >
-        <Build label="Link · back" immediate delay={0.2} className="w-fit">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 font-mono text-xs text-fog transition-colors hover:text-bone"
-          >
-            <ArrowLeft aria-hidden className="size-3.5" />
-            {tr(copy.back)}
-          </Link>
-        </Build>
+        <BackLink to="/">{tr(copy.back)}</BackLink>
         <Build label="Button · print" immediate delay={0.3} className="w-fit">
           <button
             type="button"
             onClick={print}
             data-swarm
-            className="inline-flex items-center gap-2 rounded-full border border-signal px-5 py-2.5 text-sm transition-colors hover:bg-signal hover:text-ink"
+            className={pillButton}
           >
             <Printer aria-hidden className="size-4" />
             {tr(copy.print)}

@@ -1,4 +1,4 @@
-// Fetches my FACEIT and Steam stats and saves them to src/data/gaming.json.
+// Fetches my FACEIT and Steam stats and saves them to src/content/gaming.json.
 // Runs before every build. Neither site allows a browser on another domain
 // to read its data, so the site shows this snapshot instead of a live call.
 // If a request fails, the last saved value is kept and the build goes on.
@@ -16,7 +16,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const FACEIT_NICKNAME = "Hopi9";
 const STEAM_ID = "bil9uun";
 const MATCHES = 30; // for the ELO chart; the latest few are listed too
-const OUT = new URL("../src/data/gaming.json", import.meta.url);
+const OUT = new URL("../src/content/gaming.json", import.meta.url);
 
 const headers = {
   "User-Agent": "bilguun-portfolio-build",

@@ -1,12 +1,13 @@
 import { Suspense, useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
-import Build from "@/components/build";
-import Footer from "@/components/footer";
-import { findGame } from "@/components/games/registry";
+import { createFileRoute } from "@tanstack/react-router";
+import Build from "@/components/ui/build";
+import Footer from "@/components/layout/footer";
+import { findGame } from "@/games/registry";
 import { t, useT } from "@/lib/i18n";
 import { unlock } from "@/lib/achievements";
 import { usePageReady } from "@/lib/navigation";
+import { pageContainer } from "@/components/ui/styles";
+import BackLink from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/play/$game")({ component: GamePage });
 
@@ -27,16 +28,8 @@ function GamePage() {
   }, [game]);
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 pt-36 md:px-10 md:pt-44">
-      <Build label="Link · back" immediate delay={0.2} className="w-fit">
-        <Link
-          to="/play"
-          className="inline-flex items-center gap-2 font-mono text-xs text-fog transition-colors hover:text-bone"
-        >
-          <ArrowLeft aria-hidden className="size-3.5" />
-          {tr(copy.back)}
-        </Link>
-      </Build>
+    <div className={pageContainer}>
+      <BackLink to="/play">{tr(copy.back)}</BackLink>
 
       {!game ? (
         <p className="mt-10 font-display text-4xl font-semibold">

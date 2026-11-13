@@ -1,18 +1,20 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import Build from "@/components/build";
-import Footer from "@/components/footer";
-import { navItems, projects, type Project } from "@/data/portfolio";
+import Build from "@/components/ui/build";
+import Footer from "@/components/layout/footer";
+import { navItems, projects, type Project } from "@/content/portfolio";
 import { ui, useT } from "@/lib/i18n";
 import { unlock } from "@/lib/achievements";
 import { usePageReady } from "@/lib/navigation";
+import { container, pillButton } from "@/components/ui/styles";
+import BackLink from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/work/$slug")({
   component: CaseStudyPage,
 });
 
-const shell = "mx-auto w-full max-w-7xl px-6 md:px-10";
+const shell = `${container} w-full`;
 const label = "font-mono text-xs uppercase tracking-[0.2em] text-signal";
 
 function CaseStudyPage() {
@@ -35,16 +37,9 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
   return (
     <article>
       <div className={`${shell} pt-36 md:pt-44`}>
-        <Build label="Link · back" immediate delay={0.2} className="w-fit">
-          <Link
-            to="/"
-            hash="work"
-            className="inline-flex items-center gap-2 font-mono text-xs text-fog transition-colors hover:text-bone"
-          >
-            <ArrowLeft aria-hidden className="size-3.5" />
-            {tr(ui.backToWork)}
-          </Link>
-        </Build>
+        <BackLink to="/" hash="work">
+          {tr(ui.backToWork)}
+        </BackLink>
 
         <Build
           label={`Heading · ${project.title}`}
@@ -90,7 +85,7 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
                   target="_blank"
                   rel="noreferrer"
                   data-swarm
-                  className="inline-flex items-center gap-2 rounded-full border border-signal px-5 py-2.5 text-sm transition-colors hover:bg-signal hover:text-ink"
+                  className={pillButton}
                 >
                   {tr(ui.visitSite)}
                   <ArrowUpRight aria-hidden className="size-4" />
@@ -102,11 +97,7 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
       </div>
 
       <div className={`${shell} mt-16`}>
-        <Build
-          label="Frame · cover"
-          immediate
-          delay={0.6}
-        >
+        <Build label="Frame · cover" immediate delay={0.6}>
           <div
             className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line md:aspect-[21/9]"
             style={{
@@ -143,10 +134,7 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
           <ul className="border-t border-line md:col-span-9">
             {project.built.map((item, i) => (
               <li key={item.en}>
-                <Build
-                  label={`Item · ${i + 1}`}
-                  delay={i * 0.06}
-                >
+                <Build label={`Item · ${i + 1}`} delay={i * 0.06}>
                   <p className="flex gap-5 border-b border-line py-6 text-lg leading-snug">
                     {/* Square bullet, like a selection handle */}
                     <span
@@ -161,10 +149,7 @@ function CaseStudy({ project, next }: { project: Project; next: Project }) {
           </ul>
         </section>
 
-        <Build
-          label="Link · next project"
-          className="mt-32 md:mt-44"
-        >
+        <Build label="Link · next project" className="mt-32 md:mt-44">
           <Link
             to="/work/$slug"
             params={{ slug: next.slug }}

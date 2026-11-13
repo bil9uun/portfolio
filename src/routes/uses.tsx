@@ -1,11 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import Build from "@/components/build";
-import Footer from "@/components/footer";
-import { finishes, useGroups, type UseItem } from "@/data/uses";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
+import { ModelView, ShowcaseCanvas } from "@/components/desk-3d/showcase";
+import DeviceArt from "@/components/illustrations/device-art";
+import Build from "@/components/ui/build";
+import Footer from "@/components/layout/footer";
+import { finishes, useGroups, type UseItem } from "@/content/uses";
 import { t, useT } from "@/lib/i18n";
+import { scrollToSection } from "@/lib/gsap";
 import { usePageReady } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+import { pageContainer } from "@/components/ui/styles";
+import BackLink from "@/components/ui/back-link";
+import Heading from "@/components/ui/heading";
 
 export const Route = createFileRoute("/uses")({ component: UsesPage });
 
@@ -19,32 +25,32 @@ const copy = {
   ),
   white: (n: number, total: number) =>
     t(`${n} of ${total} white`, `${total}-аас ${n} нь цагаан`),
-  unknown: t("Finish not listed", "Өнгө тодорхойгүй"),
   items: (n: number) => t(`${n} items`, `${n} зүйл`),
+  jump: t("Jump to a group", "Бүлэг рүү очих"),
 };
 
 // The colour strip covers the hardware only.
 const all = useGroups.filter((g) => g.hardware).flatMap((g) => g.items);
 const whites = all.filter((item) => item.color === "white").length;
 
-// One square per item, in its finish: the whole setup at a glance.
-const FinishStrip = () => {
+// Every piece of hardware in miniature: the whole setup at a glance.
+const Lineup = () => {
   const tr = useT();
   return (
     <div>
-      <ul className="flex flex-wrap gap-1.5" aria-hidden>
+      <ul className="grid grid-cols-6 gap-2" aria-hidden>
         {all.map((item) => (
           <li
             key={item.name}
             title={item.name}
-            className={cn(
-              "size-5 border",
-              item.color ? "border-line" : "border-dashed border-fog/50",
-            )}
-            style={
-              item.color ? { background: finishes[item.color].hex } : undefined
-            }
-          />
+            className="grid aspect-square place-items-center rounded-sm border border-line bg-ink/60 p-1.5"
+          >
+            <DeviceArt
+              kind={item.art!}
+              color={item.color}
+              className="size-full"
+            />
+          </li>
         ))}
       </ul>
       <p className="mt-3 font-mono text-xs text-fog">
@@ -54,59 +60,75 @@ const FinishStrip = () => {
   );
 };
 
-const Row = ({ item }: { item: UseItem }) => {
+// Hardware: the item turning in 3D on a small canvas, then what it is.
+const Card = ({ item }: { item: UseItem }) => {
   const tr = useT();
-  const name = (
-    <span className="font-display text-xl font-semibold leading-snug tracking-tight md:text-2xl">
-      {item.name}
-    </span>
-  );
+  const finish = item.color && finishes[item.color];
+  const Wrapper = item.url ? "a" : "div";
   return (
-    <div className="grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 border-t border-line py-5 md:grid-cols-[11rem_1fr_auto]">
-      <span className="col-span-2 font-mono text-[11px] uppercase tracking-[0.16em] text-fog md:col-span-1">
-        {tr(item.kind)}
-      </span>
-      <span className="min-w-0">
-        {item.url ? (
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
-            data-swarm
-            className="group inline-flex items-baseline gap-1.5 transition-colors hover:text-signal"
-          >
-            {name}
-            <ArrowUpRight
-              aria-hidden
-              className="size-4 shrink-0 text-fog transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-signal"
-            />
-          </a>
-        ) : (
-          name
-        )}
-        {item.detail && (
-          <span className="mt-1 block font-mono text-xs text-fog">
-            {tr(item.detail)}
-          </span>
-        )}
-      </span>
-      <span
-        className="flex items-center gap-2 self-center font-mono text-[11px] text-fog"
-        title={item.color ? undefined : tr(copy.unknown)}
-      >
-        {item.color && (
-          <>
+    <Wrapper
+      {...(item.url && { href: item.url, target: "_blank", rel: "noreferrer" })}
+      data-swarm
+      className="group flex h-full flex-col overflow-hidden rounded-sm border border-line bg-ink/60 transition-colors duration-500 hover:border-signal/60"
+    >
+      <div className="relative grid aspect-[4/3] place-items-center overflow-hidden border-b border-line">
+        <div aria-hidden className="canvas-grid absolute inset-0" />
+        <ModelView name={item.name} className="absolute inset-0" />
+        <span className="absolute left-3 top-3 font-mono text-[10px] uppercase tracking-[0.16em] text-fog">
+          {tr(item.kind)}
+        </span>
+        {finish && (
+          <span className="absolute right-3 top-3 flex items-center gap-1.5 font-mono text-[10px] text-fog">
             <span
               aria-hidden
-              className="size-3 rounded-full border border-line"
-              style={{ background: finishes[item.color].hex }}
+              className="size-2.5 rounded-full border border-line"
+              style={{ background: finish.hex }}
             />
-            <span className="hidden sm:inline">
-              {tr(finishes[item.color].label)}
-            </span>
-          </>
+            {tr(finish.label)}
+          </span>
         )}
-      </span>
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <p className="flex items-start justify-between gap-3 font-display text-lg font-semibold leading-snug tracking-tight">
+          {item.name}
+          {item.url && (
+            <ArrowUpRight
+              aria-hidden
+              className="mt-1 size-4 shrink-0 text-fog transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-signal"
+            />
+          )}
+        </p>
+        {item.detail && (
+          <p className="mt-1.5 font-mono text-xs text-fog">{tr(item.detail)}</p>
+        )}
+      </div>
+    </Wrapper>
+  );
+};
+
+// The last tile stretches over the empty cells of its row (2 and 3 columns).
+const lastTileSpan = (n: number) =>
+  cn(
+    n % 2 === 1 && "sm:col-span-2",
+    n % 3 === 1 && "lg:col-span-3",
+    n % 3 === 2 && "lg:col-span-2",
+    n % 3 === 0 && "lg:col-span-1",
+  );
+
+// Software and the site's stack: no drawing, just the facts.
+const Tile = ({ item }: { item: UseItem }) => {
+  const tr = useT();
+  return (
+    <div className="h-full bg-ink p-5 transition-colors duration-500 hover:bg-graphite">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-fog">
+        {tr(item.kind)}
+      </p>
+      <p className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight">
+        {item.name}
+      </p>
+      {item.detail && (
+        <p className="mt-1.5 font-mono text-xs text-fog">{tr(item.detail)}</p>
+      )}
     </div>
   );
 };
@@ -116,35 +138,24 @@ function UsesPage() {
   usePageReady();
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 pt-36 md:px-10 md:pt-44">
-      <Build label="Link · back" immediate delay={0.2} className="w-fit">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 font-mono text-xs text-fog transition-colors hover:text-bone"
-        >
-          <ArrowLeft aria-hidden className="size-3.5" />
-          {tr(copy.back)}
-        </Link>
-      </Build>
+    <div className={pageContainer}>
+      <BackLink to="/">{tr(copy.back)}</BackLink>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-8">
-          <Build label="Heading · uses" immediate delay={0.3} className="w-fit">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-fog">
-              <span className="text-signal">//</span> {tr(copy.eyebrow)}
-            </p>
-            <h1 className="mt-5 font-display text-[clamp(3rem,8vw,6.5rem)] font-bold leading-[0.9] tracking-[-0.03em]">
-              {tr(copy.title)}
-            </h1>
-          </Build>
-          <Build
-            label="Text · intro"
+          <Heading
+            level={1}
+            label="Heading · uses"
             immediate
-            delay={0.4}
-            className="mt-8 max-w-xl"
-          >
-            <p className="text-lg leading-relaxed text-fog">{tr(copy.intro)}</p>
-          </Build>
+            delay={0.3}
+            eyebrow={
+              <>
+                <span className="text-signal">//</span> {tr(copy.eyebrow)}
+              </>
+            }
+            title={tr(copy.title)}
+            intro={tr(copy.intro)}
+          />
         </div>
         <Build
           label="Strip · finishes"
@@ -152,16 +163,39 @@ function UsesPage() {
           delay={0.5}
           className="lg:col-span-4"
         >
-          <FinishStrip />
+          <Lineup />
         </Build>
       </div>
 
+      <Build label="Nav · groups" immediate delay={0.6} className="mt-12 w-fit">
+        <nav aria-label={tr(copy.jump)}>
+          <ul className="flex flex-wrap gap-2 font-mono text-xs">
+            {useGroups.map((group) => (
+              <li key={group.id}>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection(`uses-${group.id}`)}
+                  className="rounded-full border border-line px-3.5 py-1.5 text-fog transition-colors hover:border-signal hover:text-bone"
+                >
+                  {tr(group.title)}
+                  <span className="ml-2 text-fog/60">{group.items.length}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </Build>
+
       <div className="mt-20 space-y-20 md:mt-28 md:space-y-28">
         {useGroups.map((group) => (
-          <section key={group.id} aria-labelledby={`uses-${group.id}`}>
+          <section
+            key={group.id}
+            id={`uses-${group.id}`}
+            aria-labelledby={`uses-${group.id}-title`}
+          >
             <Build label={`Group · ${group.title.en}`} className="w-fit">
               <h2
-                id={`uses-${group.id}`}
+                id={`uses-${group.id}-title`}
                 className="font-display text-4xl font-semibold tracking-tight md:text-5xl"
               >
                 {tr(group.title)}
@@ -171,19 +205,49 @@ function UsesPage() {
                 {group.note && ` · ${tr(group.note)}`}
               </p>
             </Build>
-            <ul className="mt-8 border-b border-line">
-              {group.items.map((item, i) => (
-                <li key={item.name}>
-                  <Build label={`Item · ${item.name}`} delay={(i % 4) * 0.05}>
-                    <Row item={item} />
-                  </Build>
-                </li>
-              ))}
-            </ul>
+            {group.hardware ? (
+              <ul
+                className={cn(
+                  "mt-8 grid gap-4 sm:grid-cols-2",
+                  group.items.length % 4 === 0
+                    ? "lg:grid-cols-4"
+                    : "lg:grid-cols-3",
+                )}
+              >
+                {group.items.map((item, i) => (
+                  <li key={item.name}>
+                    <Build
+                      label={`Item · ${item.name}`}
+                      delay={(i % 4) * 0.06}
+                      className="h-full"
+                    >
+                      <Card item={item} />
+                    </Build>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="mt-8 grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+                {group.items.map((item, i) => (
+                  <li
+                    key={item.name}
+                    className={cn(
+                      "bg-ink",
+                      i === group.items.length - 1 &&
+                        lastTileSpan(group.items.length),
+                    )}
+                  >
+                    <Tile item={item} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ))}
       </div>
 
+      {/* One WebGL canvas behind every card's 3D model */}
+      <ShowcaseCanvas />
       <Footer />
     </div>
   );

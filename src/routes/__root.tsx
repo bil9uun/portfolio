@@ -1,14 +1,14 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import AchievementToast from "@/components/achievement-toast";
-import Backdrop from "@/components/backdrop";
-import CursorChat from "@/components/cursor-chat";
-import Header from "@/components/header";
-import InspectOverlay from "@/components/inspect";
-import SoundHint from "@/components/sound-hint";
-import SwarmCursors from "@/components/swarm-cursors";
-import TerminalHint from "@/components/terminal-hint";
+import AchievementToast from "@/components/overlays/achievement-toast";
+import Backdrop from "@/components/layout/backdrop";
+import CursorChat from "@/components/overlays/cursor-chat";
+import Header from "@/components/layout/header";
+import InspectOverlay from "@/components/overlays/inspect";
+import SoundHint from "@/components/overlays/sound-hint";
+import SwarmCursors from "@/components/layout/swarm-cursors";
+import TerminalHint from "@/components/overlays/terminal-hint";
 import {
   gsap,
   prefersReducedMotion,
@@ -27,8 +27,10 @@ import {
 } from "@/lib/store";
 
 // The palette (cmdk + dialog) and the terminal load the first time they open.
-const CommandPalette = lazy(() => import("@/components/command-palette"));
-const Terminal = lazy(() => import("@/components/terminal"));
+const CommandPalette = lazy(
+  () => import("@/components/overlays/command-palette"),
+);
+const Terminal = lazy(() => import("@/components/overlays/terminal"));
 
 const RootLayout = () => {
   const replay = useStore(replayCount);

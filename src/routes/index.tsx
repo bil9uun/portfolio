@@ -1,11 +1,11 @@
-import AfkSection from "@/components/afk";
-import ArcadeSection from "@/components/arcade";
-import ContactSection from "@/components/contact";
-import ExpertiseSection from "@/components/expertise";
-import HeroSection from "@/components/hero";
-import SetupSection from "@/components/setup";
-import CareerSection from "@/components/career";
-import WorkSection from "@/components/work";
+import AfkSection from "@/sections/afk";
+import ArcadeSection from "@/sections/arcade";
+import ContactSection from "@/sections/contact";
+import ExpertiseSection from "@/sections/expertise";
+import HeroSection from "@/sections/hero";
+import SetupSection from "@/sections/setup";
+import CareerSection from "@/sections/career";
+import WorkSection from "@/sections/work";
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageReady } from "@/lib/navigation";
 

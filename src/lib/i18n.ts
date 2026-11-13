@@ -5,6 +5,9 @@ export type Text = Record<Lang, string>;
 
 export const t = (en: string, mn: string): Text => ({ en, mn });
 
+// Text that reads the same in both languages: names, numbers, units.
+export const same = (text: string): Text => ({ en: text, mn: text });
+
 const initial = (): Lang => {
   const saved = readSetting("lang");
   if (saved === "en" || saved === "mn") return saved;
@@ -28,7 +31,7 @@ export function useT() {
   return (text: Text) => text[lang];
 }
 
-// Interface copy. Content lives in src/data/portfolio.ts.
+// Interface copy. Content lives in src/content/.
 export const ui = {
   openToWork: t("Open to new projects", "Шинэ төсөлд нээлттэй"),
   roleLead: t("Software engineer,", "Програм хангамжийн инженер,"),

@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import Build from "@/components/build";
-import Footer from "@/components/footer";
-import { games } from "@/components/games/registry";
-import { readBest } from "@/components/games/use-best";
+import { ArrowUpRight } from "lucide-react";
+import Build from "@/components/ui/build";
+import Footer from "@/components/layout/footer";
+import { games } from "@/games/registry";
+import { readBest } from "@/games/use-best";
 import { t, useT } from "@/lib/i18n";
 import { usePageReady } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+import { pageContainer } from "@/components/ui/styles";
+import BackLink from "@/components/ui/back-link";
+import Heading from "@/components/ui/heading";
 
 export const Route = createFileRoute("/play/")({ component: PlayHub });
 
@@ -26,39 +29,24 @@ function PlayHub() {
   const tr = useT();
   usePageReady();
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 pt-36 md:px-10 md:pt-44">
-      <Build label="Link · back" immediate delay={0.2} className="w-fit">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 font-mono text-xs text-fog transition-colors hover:text-bone"
-        >
-          <ArrowLeft aria-hidden className="size-3.5" />
-          {tr(copy.back)}
-        </Link>
-      </Build>
+    <div className={pageContainer}>
+      <BackLink to="/">{tr(copy.back)}</BackLink>
 
-      <Build
-        label="Heading · play"
-        immediate
-        delay={0.3}
-        className="mt-10 w-fit"
-      >
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-fog">
-          <span className="text-signal">//</span> {tr(copy.eyebrow)}
-        </p>
-        <h1 className="mt-5 font-display text-[clamp(3rem,9vw,7.5rem)] font-bold leading-[0.9] tracking-[-0.03em]">
-          {tr(copy.title)}
-        </h1>
-      </Build>
-
-      <Build
-        label="Text · intro"
-        immediate
-        delay={0.4}
-        className="mt-8 max-w-xl"
-      >
-        <p className="text-lg leading-relaxed text-fog">{tr(copy.intro)}</p>
-      </Build>
+      <div className="mt-10">
+        <Heading
+          level={1}
+          label="Heading · play"
+          immediate
+          delay={0.3}
+          eyebrow={
+            <>
+              <span className="text-signal">//</span> {tr(copy.eyebrow)}
+            </>
+          }
+          title={tr(copy.title)}
+          intro={tr(copy.intro)}
+        />
+      </div>
 
       <ul className="mt-16 grid gap-px border border-line bg-line md:mt-24 md:grid-cols-2 lg:grid-cols-3">
         {games.map((game, i) => {
