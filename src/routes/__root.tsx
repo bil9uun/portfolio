@@ -8,6 +8,7 @@ import Header from "@/components/header";
 import InspectOverlay from "@/components/inspect";
 import SoundHint from "@/components/sound-hint";
 import SwarmCursors from "@/components/swarm-cursors";
+import TerminalHint from "@/components/terminal-hint";
 import {
   gsap,
   prefersReducedMotion,
@@ -84,6 +85,7 @@ const RootLayout = () => {
       <InspectOverlay />
       <SoundHint />
       <AchievementToast />
+      <TerminalHint />
       {terminalLoaded && (
         <Suspense fallback={null}>
           <Terminal />

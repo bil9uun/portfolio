@@ -3,7 +3,7 @@ import { navItems, profile } from "@/data/portfolio";
 import { ScrollSmoother } from "@/lib/gsap";
 import { setLang, ui, useLang, useT } from "@/lib/i18n";
 import { useGoToSection, usePathname } from "@/lib/navigation";
-import { paletteOpen } from "@/lib/store";
+import { paletteOpen, terminalOpen } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import Build from "@/components/build";
 
@@ -167,6 +167,16 @@ const Header = () => {
           >
             <div className="flex items-center gap-5">
               <LangToggle />
+              <button
+                id="terminal-button"
+                type="button"
+                onClick={() => terminalOpen.set(true)}
+                aria-label={tr(ui.terminal)}
+                title={tr(ui.terminal)}
+                className="rounded border border-line px-2 py-1 font-mono text-[11px] text-fog transition-colors hover:border-signal hover:text-bone"
+              >
+                &gt;_
+              </button>
               <button
                 type="button"
                 onClick={() => paletteOpen.set(true)}

@@ -10,18 +10,12 @@ import { ui, useT } from "@/lib/i18n";
 
 const PREVIEW_WIDTH = 320;
 
-// How much of the project is mine, as a small filled / half / outlined square.
+// Built from scratch: a filled square. Taken over: an outlined one.
 const InvolvementMark = ({ kind }: { kind: Project["involvement"] }) => (
   <span
     aria-hidden
-    className="relative inline-block size-2.5 shrink-0 overflow-hidden border border-current"
-  >
-    {kind !== "took-over" && (
-      <span
-        className={`absolute inset-y-0 left-0 bg-current ${kind === "built" ? "w-full" : "w-1/2"}`}
-      />
-    )}
-  </span>
+    className={`inline-block size-2.5 shrink-0 border border-current ${kind === "built" ? "bg-current" : ""}`}
+  />
 );
 
 const WorkSection = () => {

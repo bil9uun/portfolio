@@ -49,8 +49,8 @@ export const ui = {
   soundOn: t("Sound on", "Дуу асаалттай"),
   soundOff: t("Sound off", "Дуу унтраалттай"),
   shortcuts: t(
-    "⌘K commands · / chat · I inspect",
-    "⌘K команд · / чат · I inspect",
+    "⌘K commands · ` terminal · / chat · I inspect",
+    "⌘K команд · ` terminal · / чат · I inspect",
   ),
   gpa: t("GPA", "Голч"),
   // Case study
@@ -100,6 +100,17 @@ export const ui = {
   cv: t("CV", "CV"),
   viewCv: t("View CV", "CV үзэх"),
   terminal: t("Open the terminal", "Terminal нээх"),
+  // {key} is drawn as a key cap.
+  terminalHint: {
+    keys: t(
+      "Psst. Press {key} to open a terminal.",
+      "Псс. {key} дарж terminal нээгээрэй.",
+    ),
+    touch: t(
+      "Psst. Tap {key} to open a terminal.",
+      "Псс. {key} дээр дарж terminal нээгээрэй.",
+    ),
+  },
   achievementsLabel: t("Achievements", "Амжилтууд"),
   achievementUnlocked: t("Achievement unlocked", "Амжилт нээгдлээ"),
   enableTilt: t(

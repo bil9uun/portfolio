@@ -86,13 +86,12 @@ export type Project = {
   tags: string[];
   url: string;
   colors: [string, string];
-  /** How I came to the project: built it, led its frontend, or took it over. */
-  involvement: "built" | "lead" | "took-over";
+  /** How I came to the project: built it from scratch, or took it over. */
+  involvement: "built" | "took-over";
 };
 
 export const involvementLabels = {
   built: t("Built from scratch", "Эхнээс нь бүтээсэн"),
-  lead: t("Frontend lead", "Фронтенд хариуцсан"),
   "took-over": t("Took over", "Хүлээн авч хөгжүүлсэн"),
 };
 
@@ -199,12 +198,12 @@ export const projects: Project[] = [
       "Фронтенд хөгжүүлэгч · MD ба нийлүүлэгчийн портал",
     ),
     description: t(
-      "Collaboration portal between GS25's merchandising (MD) team and its vendors. I am responsible for the frontend of both web applications, covering product, price and promotion requests, orders, returns, meetings and surveys.",
-      "GS25-ийн мерчандайзинг (MD) баг болон нийлүүлэгчдийн хамтын ажиллагааны портал. Хоёр вэб аппликейшны фронтенд хөгжүүлэлтийг бүрэн хариуцдаг: бүтээгдэхүүн, үнэ, урамшууллын хүсэлт, захиалга, буцаалт, уулзалт, судалгаа.",
+      "Collaboration portal between GS25's merchandising (MD) team and its vendors. I built the frontend of both web applications from scratch and remain responsible for it: product, price and promotion requests, orders, returns, meetings and surveys.",
+      "GS25-ийн мерчандайзинг (MD) баг болон нийлүүлэгчдийн хамтын ажиллагааны портал. Хоёр вэб аппликейшны фронтендийг эхнээс нь бүтээж, хариуцан ажилладаг: бүтээгдэхүүн, үнэ, урамшууллын хүсэлт, захиалга, буцаалт, уулзалт, судалгаа.",
     ),
     overview: t(
-      "The portal is a Turborepo monorepo with two Vite applications: one for GS25's merchandising (MD) team and one for its vendors. Requests flow between them: vendors submit products, prices and promotions, and the MD team reviews, transfers and approves them. I have worked on both applications as the frontend developer and am responsible for their frontend.",
-      "Портал нь хоёр Vite аппликейшнтай Turborepo monorepo: нэг нь GS25-ийн мерчандайзинг (MD) багт, нөгөө нь нийлүүлэгчдэд зориулагдсан. Хүсэлтүүд хоёрын хооронд урсдаг: нийлүүлэгч бүтээгдэхүүн, үнэ, урамшууллаа илгээж, MD баг хянан шилжүүлж, баталгаажуулдаг. Хоёр аппликейшн дээр фронтенд хөгжүүлэгчээр ажиллаж, тэдгээрийн фронтендийг бүрэн хариуцдаг.",
+      "The portal is a Turborepo monorepo with two Vite applications: one for GS25's merchandising (MD) team and one for its vendors. Requests flow between them: vendors submit products, prices and promotions, and the MD team reviews, transfers and approves them. I built the frontend of both applications from scratch and am responsible for it.",
+      "Портал нь хоёр Vite аппликейшнтай Turborepo monorepo: нэг нь GS25-ийн мерчандайзинг (MD) багт, нөгөө нь нийлүүлэгчдэд зориулагдсан. Хүсэлтүүд хоёрын хооронд урсдаг: нийлүүлэгч бүтээгдэхүүн, үнэ, урамшууллаа илгээж, MD баг хянан шилжүүлж, баталгаажуулдаг. Хоёр аппликейшны фронтендийг эхнээс нь бүтээсэн бөгөөд хариуцан ажилладаг.",
     ),
     built: [
       t(
@@ -235,7 +234,7 @@ export const projects: Project[] = [
     tags: ["React", "TanStack Router", "TanStack Query", "Turborepo"],
     url: "https://vendor.dico.mn/auth/login",
     colors: ["#4D8DFF", "#2EC4D6"],
-    involvement: "lead",
+    involvement: "built",
   },
   {
     slug: "gs25-parttime",
@@ -444,8 +443,8 @@ export type TimelineItem = {
 
 export const experience: TimelineItem[] = [
   {
-    period: t("2024 — Now", "2024 — Одоо"),
-    span: [2024.42, null],
+    period: t("Sep 2024 — Now", "2024.09 — Одоо"),
+    span: [2024.67, null],
     role: t("Frontend developer", "Фронтенд хөгжүүлэгч"),
     org: "Zero technology LLC",
     summary: t(
