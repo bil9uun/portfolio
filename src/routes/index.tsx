@@ -2,9 +2,7 @@ import ArcadeSection from "@/components/arcade";
 import ContactSection from "@/components/contact";
 import ExpertiseSection from "@/components/expertise";
 import HeroSection from "@/components/hero";
-import TimelineSection from "@/components/timeline";
-import EducationSection from "@/components/education";
-import { experience } from "@/data/portfolio";
+import CareerSection from "@/components/career";
 import WorkSection from "@/components/work";
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageReady } from "@/lib/navigation";
@@ -20,8 +18,7 @@ function Index() {
       <HeroSection />
       <ExpertiseSection />
       <WorkSection />
-      <TimelineSection id="experience" items={experience} />
-      <EducationSection />
+      <CareerSection />
       <ArcadeSection />
       <ContactSection />
     </div>

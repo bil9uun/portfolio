@@ -1,8 +1,17 @@
+import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowUp, Gamepad2, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import {
+  ArrowUp,
+  FileText,
+  Gamepad2,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import Build from "@/components/build";
 import { profile } from "@/data/portfolio";
 import { useLocalTime } from "@/hooks/use-local-time";
+import { unlock } from "@/lib/achievements";
 import { scrollToTop } from "@/lib/gsap";
 import { ui, useT } from "@/lib/i18n";
 import { replayBuild } from "@/lib/replay";
@@ -16,9 +25,23 @@ const Footer = () => {
   const tr = useT();
   const time = useLocalTime(profile.timeZone);
   const sound = useStore(soundOn);
+  const root = useRef<HTMLElement>(null);
+
+  // Reaching the footer counts as reaching the end.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && unlock("bottom"),
+      { threshold: 0.9 },
+    );
+    observer.observe(root.current!);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <footer className="mt-32 border-t border-line py-8 font-mono text-xs text-fog">
+    <footer
+      ref={root}
+      className="mt-32 border-t border-line py-8 font-mono text-xs text-fog"
+    >
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Build label="Text · shortcuts" start="top bottom" className="w-fit">
           <p className="pointer-coarse:hidden">{tr(ui.shortcuts)}</p>
@@ -50,6 +73,10 @@ const Footer = () => {
             <Link to="/play" className={control}>
               <Gamepad2 aria-hidden className="size-3.5" />
               {tr(ui.play)}
+            </Link>
+            <Link to="/cv" className={control}>
+              <FileText aria-hidden className="size-3.5" />
+              {tr(ui.cv)}
             </Link>
           </div>
         </Build>

@@ -3,12 +3,26 @@ import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
-import { projects } from "@/data/portfolio";
+import { involvementLabels, projects, type Project } from "@/data/portfolio";
 import Build from "@/components/build";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ui, useT } from "@/lib/i18n";
 
 const PREVIEW_WIDTH = 320;
+
+// How much of the project is mine, as a small filled / half / outlined square.
+const InvolvementMark = ({ kind }: { kind: Project["involvement"] }) => (
+  <span
+    aria-hidden
+    className="relative inline-block size-2.5 shrink-0 overflow-hidden border border-current"
+  >
+    {kind !== "took-over" && (
+      <span
+        className={`absolute inset-y-0 left-0 bg-current ${kind === "built" ? "w-full" : "w-1/2"}`}
+      />
+    )}
+  </span>
+);
 
 const WorkSection = () => {
   const preview = useRef<HTMLDivElement>(null);
@@ -89,9 +103,17 @@ const WorkSection = () => {
                   params={{ slug: project.slug }}
                   data-swarm
                   data-index={i}
-                  className="group grid grid-cols-12 items-baseline gap-x-4 gap-y-2 border-t border-line py-8 md:py-11"
+                  className="group relative isolate -mx-4 grid grid-cols-12 items-baseline gap-x-4 gap-y-2 border-t border-line px-4 py-8 transition-colors duration-500 md:-mx-6 md:px-6 md:py-11 pointer-fine:hover:text-ink"
                 >
-                  <span className="col-span-12 font-mono text-xs text-fog md:col-span-1">
+                  {/* The project's colours wipe across the row on hover. */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 -z-10 origin-left scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-fine:group-hover:scale-x-100"
+                    style={{
+                      background: `linear-gradient(100deg, ${project.colors[0]}, ${project.colors[1]})`,
+                    }}
+                  />
+                  <span className="col-span-12 font-mono text-xs text-fog transition-colors duration-500 group-hover:text-current md:col-span-1">
                     {project.year}
                   </span>
                   <span className="col-span-11 font-display text-[clamp(2rem,5.5vw,4.5rem)] font-semibold leading-none tracking-[-0.015em] transition-transform duration-500 ease-out group-hover:translate-x-3 md:col-span-6">
@@ -99,11 +121,17 @@ const WorkSection = () => {
                   </span>
                   <ArrowUpRight
                     aria-hidden
-                    className="col-span-1 size-6 self-center justify-self-end text-fog transition-all duration-500 group-hover:rotate-45 group-hover:text-signal md:order-last md:size-8"
+                    className="col-span-1 size-6 self-center justify-self-end text-fog transition-all duration-500 group-hover:rotate-45 group-hover:text-current md:order-last md:size-8"
                   />
-                  <span className="col-span-12 text-sm text-fog md:col-span-4">
-                    <span className="text-bone">{tr(project.role)}</span>
-                    <span className="mt-1 block font-mono text-xs">
+                  <span className="col-span-12 text-sm text-fog transition-colors duration-500 group-hover:text-current md:col-span-4">
+                    <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+                      <InvolvementMark kind={project.involvement} />
+                      {tr(involvementLabels[project.involvement])}
+                    </span>
+                    <span className="mt-2 block text-bone transition-colors duration-500 group-hover:text-current">
+                      {tr(project.role)}
+                    </span>
+                    <span className="mt-1 block font-mono text-xs opacity-80">
                       {project.tags.join(" · ")}
                     </span>
                   </span>

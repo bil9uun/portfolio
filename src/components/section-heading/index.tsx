@@ -1,4 +1,5 @@
 import Build from "@/components/build";
+import WaveText from "@/components/wave-text";
 import { navItems, sectionTitles } from "@/data/portfolio";
 import { useT } from "@/lib/i18n";
 
@@ -21,7 +22,7 @@ const SectionHeading = ({ id }: Props) => {
         {tr(navItems[position].label)}
       </p>
       <h2 className="mt-5 font-display text-[clamp(2.75rem,7vw,6rem)] font-semibold leading-[0.95] tracking-[-0.015em]">
-        {tr(sectionTitles[id])}
+        <WaveText text={tr(sectionTitles[id])} />
       </h2>
     </Build>
   );

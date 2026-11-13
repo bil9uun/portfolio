@@ -29,6 +29,7 @@ export const SelectionFrame = ({
   <div
     ref={frameRef}
     aria-hidden
+    data-frame
     style={{ visibility: "hidden" }}
     className={cn("pointer-events-none absolute z-10", className)}
   >

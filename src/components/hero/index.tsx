@@ -1,13 +1,27 @@
-import { useRef } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { profile } from "@/data/portfolio";
-import { useLocalTime } from "@/hooks/use-local-time";
+import { localStatus, useLocalTime } from "@/hooks/use-local-time";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
-import { addFrameDraw, swarm } from "@/lib/swarm";
+import { guestName } from "@/lib/guest";
+import { click } from "@/lib/sound";
+import {
+  addFrameDraw,
+  releaseCursor,
+  requestCursor,
+  swarm,
+  type SwarmTask,
+} from "@/lib/swarm";
 import { SelectionFrame } from "@/components/build";
 import { cn } from "@/lib/utils";
 import { ui, useT } from "@/lib/i18n";
 
 const LETTERS = ["B", ".", "B", "i", "l", "g", "u", "u", "n"];
+
+const STATUS_DOT = {
+  working: "bg-signal",
+  free: "bg-[#FFB020]",
+  asleep: "bg-[#4D8DFF]",
+};
 
 const HeroSection = () => {
   const root = useRef<HTMLElement>(null);
@@ -15,8 +29,18 @@ const HeroSection = () => {
   const frame = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const badge = useRef<HTMLSpanElement>(null);
+  const greetFrame = useRef<HTMLDivElement>(null);
+  const greetBox = useRef<HTMLDivElement>(null);
+  const greetBadge = useRef<HTMLSpanElement>(null);
+  const caret = useRef<HTMLSpanElement>(null);
+  // Letters of the greeting typed so far.
+  const [typed, setTyped] = useState(() =>
+    guestName && !prefersReducedMotion() ? 0 : Infinity,
+  );
   const time = useLocalTime(profile.timeZone);
+  const status = localStatus(profile.timeZone);
   const tr = useT();
+  const greeting = guestName ? tr(ui.greeting(guestName)) : "";
   const [scrollA, scrollB] = tr(ui.scrollHint).split("|");
 
   // Intro: a cursor drags a selection frame around the name,
@@ -54,8 +78,60 @@ const HeroSection = () => {
         )
         .call(() => void (swarm.focus = null), undefined, 1.6);
 
+      // A personal link: a cursor draws a text box and types the greeting.
+      let typist: SwarmTask | null = null;
+      let releaseGreeting = () => {};
+      if (guestName) {
+        releaseGreeting = addFrameDraw(
+          tl,
+          {
+            frame: greetFrame.current!,
+            box: greetBox.current!,
+            badge: greetBadge.current!,
+          },
+          1.5,
+          0.5,
+        );
+        const { en, mn } = ui.greeting(guestName);
+        const length = Math.max(en.length, mn.length);
+        const typing = { n: 0, shown: 0 };
+        tl.call(
+          () => {
+            typist = requestCursor(() => {
+              const r = caret.current?.getBoundingClientRect();
+              return r ? { x: r.right + 2, y: r.bottom - 2 } : null;
+            });
+          },
+          undefined,
+          2.1,
+        )
+          .to(
+            typing,
+            {
+              n: length,
+              duration: length * 0.045,
+              ease: "none",
+              onUpdate: () => {
+                const n = Math.floor(typing.n);
+                if (n === typing.shown) return;
+                typing.shown = n;
+                if (n % 2 === 0) click({ pitch: 1.4, gain: 0.02 });
+                setTyped(n);
+              },
+            },
+            2.2,
+          )
+          .call(() => {
+            setTyped(Infinity);
+            releaseCursor(typist);
+            typist = null;
+          });
+      }
+
       return () => {
         release();
+        releaseGreeting();
+        releaseCursor(typist);
         swarm.focus = null;
       };
     },
@@ -68,11 +144,40 @@ const HeroSection = () => {
       ref={root}
       className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6"
     >
-
       <div
         data-speed="0.85"
         className="relative flex flex-col items-center text-center"
       >
+        {guestName && (
+          <div className="relative mb-8 md:mb-10">
+            <SelectionFrame
+              label="Text · greeting"
+              className="-inset-x-3 -inset-y-2"
+              frameRef={greetFrame}
+              boxRef={greetBox}
+              badgeRef={greetBadge}
+            />
+            <p className="relative text-left font-display text-xl font-medium tracking-tight md:text-3xl">
+              {/* The full line holds the space; the typed part sits on top. */}
+              <span aria-hidden className="invisible">
+                {greeting}
+                <span className="ml-0.5 inline-block w-[2px]" />
+              </span>
+              <span className="absolute inset-0">
+                {greeting.slice(0, typed)}
+                <span
+                  ref={caret}
+                  aria-hidden
+                  className={cn(
+                    "ml-0.5 inline-block h-[0.9em] w-[2px] translate-y-[0.1em] bg-signal",
+                    typed === Infinity ? "animate-caret" : "",
+                  )}
+                />
+              </span>
+            </p>
+          </div>
+        )}
+
         <p
           data-hero-fade
           className="mb-8 flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-fog md:text-xs"
@@ -103,6 +208,7 @@ const HeroSection = () => {
                 <span
                   key={i}
                   data-letter
+                  style={{ "--i": i } as CSSProperties}
                   className={cn(
                     "inline-block",
                     letter === "." && "text-signal",
@@ -133,6 +239,14 @@ const HeroSection = () => {
           {tr(profile.location)}
           <br />
           <span className="text-bone">{time}</span> {tr(ui.localTime)}
+          <br />
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className={cn("size-1.5 rounded-full", STATUS_DOT[status])}
+            />
+            {tr(ui.status[status])}
+          </span>
         </p>
         {/* Mouse with a scrolling wheel dot */}
         <div

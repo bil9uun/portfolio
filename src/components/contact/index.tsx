@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { ArrowUpRight, Check, Copy, Phone } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Check, Copy, FileText, Phone } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
+import WaveText from "@/components/wave-text";
 import { profile } from "@/data/portfolio";
 import Build from "@/components/build";
 import Footer from "@/components/footer";
@@ -43,27 +45,37 @@ const ContactSection = () => {
               className="group relative font-display text-[clamp(2rem,7vw,6rem)] font-semibold leading-none tracking-[-0.02em]"
             >
               {/* Wrap before "@" on narrow screens, never mid-word. */}
-              {profile.email.split("@")[0]}
-              <wbr />@{profile.email.split("@")[1]}
+              <WaveText text={profile.email.split("@")[0]} />
+              <wbr />
+              <WaveText text={`@${profile.email.split("@")[1]}`} />
               <span
                 aria-hidden
                 className="absolute -bottom-2 left-0 h-[3px] w-full origin-left scale-x-0 bg-signal transition-transform duration-700 ease-out group-hover:scale-x-100"
               />
             </a>
-            <button
-              type="button"
-              onClick={copyEmail}
-              className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 font-mono text-xs text-fog transition-colors hover:border-signal hover:text-bone"
-            >
-              {copied ? (
-                <Check aria-hidden className="size-3.5 text-signal" />
-              ) : (
-                <Copy aria-hidden className="size-3.5" />
-              )}
-              <span aria-live="polite">
-                {tr(copied ? ui.emailCopied : ui.copyEmail)}
-              </span>
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 font-mono text-xs text-fog transition-colors hover:border-signal hover:text-bone"
+              >
+                {copied ? (
+                  <Check aria-hidden className="size-3.5 text-signal" />
+                ) : (
+                  <Copy aria-hidden className="size-3.5" />
+                )}
+                <span aria-live="polite">
+                  {tr(copied ? ui.emailCopied : ui.copyEmail)}
+                </span>
+              </button>
+              <Link
+                to="/cv"
+                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 font-mono text-xs text-fog transition-colors hover:border-signal hover:text-bone"
+              >
+                <FileText aria-hidden className="size-3.5" />
+                {tr(ui.viewCv)}
+              </Link>
+            </div>
           </div>
         </Build>
 

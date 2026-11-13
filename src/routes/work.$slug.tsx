@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import Build from "@/components/build";
 import Footer from "@/components/footer";
 import { navItems, projects, type Project } from "@/data/portfolio";
 import { ui, useT } from "@/lib/i18n";
+import { unlock } from "@/lib/achievements";
 import { usePageReady } from "@/lib/navigation";
 
 export const Route = createFileRoute("/work/$slug")({
@@ -25,6 +27,7 @@ function CaseStudyPage() {
 
 function CaseStudy({ project, next }: { project: Project; next: Project }) {
   const tr = useT();
+  useEffect(() => unlock("case"), []);
   const work = navItems.find((item) => item.id === "work")!;
   const position = navItems.indexOf(work) + 1;
   const external = project.url.startsWith("http");

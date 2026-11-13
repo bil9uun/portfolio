@@ -1,10 +1,11 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import Build from "@/components/build";
 import Footer from "@/components/footer";
 import { findGame } from "@/components/games/registry";
 import { t, useT } from "@/lib/i18n";
+import { unlock } from "@/lib/achievements";
 import { usePageReady } from "@/lib/navigation";
 
 export const Route = createFileRoute("/play/$game")({ component: GamePage });
@@ -21,6 +22,9 @@ function GamePage() {
   const tr = useT();
   usePageReady();
   const game = findGame(id);
+  useEffect(() => {
+    if (game) unlock("player");
+  }, [game]);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-6 pt-36 md:px-10 md:pt-44">

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import AchievementToast from "@/components/achievement-toast";
 import Backdrop from "@/components/backdrop";
 import CursorChat from "@/components/cursor-chat";
 import Header from "@/components/header";
@@ -14,23 +15,42 @@ import {
   ScrollTrigger,
   useGSAP,
 } from "@/lib/gsap";
+import "@/lib/party"; // listens for the Konami code
 import { REBUILT } from "@/lib/replay";
-import { paletteOpen, replayCount, useStore } from "@/lib/store";
+import {
+  isTyping,
+  paletteOpen,
+  replayCount,
+  terminalOpen,
+  useStore,
+} from "@/lib/store";
 
-// The palette (cmdk + dialog) loads the first time it is opened.
+// The palette (cmdk + dialog) and the terminal load the first time they open.
 const CommandPalette = lazy(() => import("@/components/command-palette"));
+const Terminal = lazy(() => import("@/components/terminal"));
 
 const RootLayout = () => {
   const replay = useStore(replayCount);
   const paletteRequested = useStore(paletteOpen);
   const [paletteLoaded, setPaletteLoaded] = useState(false);
   if (paletteRequested && !paletteLoaded) setPaletteLoaded(true);
+  const terminalRequested = useStore(terminalOpen);
+  const [terminalLoaded, setTerminalLoaded] = useState(false);
+  if (terminalRequested && !terminalLoaded) setTerminalLoaded(true);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         paletteOpen.set(!paletteOpen.get());
+      } else if (
+        e.key === "`" &&
+        !terminalOpen.get() &&
+        !paletteOpen.get() &&
+        !isTyping(e.target)
+      ) {
+        e.preventDefault();
+        terminalOpen.set(true);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -63,6 +83,12 @@ const RootLayout = () => {
       <CursorChat />
       <InspectOverlay />
       <SoundHint />
+      <AchievementToast />
+      {terminalLoaded && (
+        <Suspense fallback={null}>
+          <Terminal />
+        </Suspense>
+      )}
       {paletteLoaded && (
         <Suspense fallback={null}>
           <CommandPalette />

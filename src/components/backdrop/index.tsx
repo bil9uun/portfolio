@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import { isParty } from "@/lib/party";
+import { tilt } from "@/lib/tilt";
 import { prefersReducedMotion } from "@/lib/gsap";
 
 // A 3D version of the site's dotted design canvas: a field of points that
@@ -107,7 +109,6 @@ const SECTION_TINTS: [string, string][] = [
   ["expertise", "#2EC4D6"],
   ["work", "#4D8DFF"],
   ["experience", "#A57BFF"],
-  ["education", "#FFB020"],
   ["play", "#FF5CA8"],
   ["contact", "#22C55E"],
 ];
@@ -115,6 +116,14 @@ const DEFAULT_TINT = "#22C55E";
 
 const rgb = (hex: string) =>
   [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [
+    number,
+    number,
+    number,
+  ];
+
+// Fully saturated colour for a hue in 0..1 (party mode cycles through them).
+const hue = (h: number) =>
+  [0, 2 / 3, 1 / 3].map((o) => 0.5 + 0.5 * Math.cos(2 * Math.PI * (h + o))) as [
     number,
     number,
     number,
@@ -307,8 +316,9 @@ const Backdrop = () => {
       const dt = Math.min((now - prev) / 1000, 0.05);
       prev = now;
       const follow = 1 - Math.exp(-dt * 3);
-      eased.x += (pointer.x - eased.x) * follow;
-      eased.y += (pointer.y - eased.y) * follow;
+      // On phones, tilting the device steers the camera instead.
+      eased.x += ((tilt.active ? tilt.x : pointer.x) - eased.x) * follow;
+      eased.y += ((tilt.active ? tilt.y : pointer.y) - eased.y) * follow;
 
       // Lift the ground under a moving pointer; let it settle when it rests.
       const hit = toGround(pointer.x, pointer.y);
@@ -327,13 +337,16 @@ const Backdrop = () => {
       eased.velocity += (capped - eased.velocity) * (1 - Math.exp(-dt * 5));
       eased.scroll += eased.velocity * dt;
       // Scrolling swells the waves a little, never more than the cap allows.
-      const energy = (Math.abs(eased.velocity) / MAX_SPEED) * 0.6;
+      const party = isParty();
+      const energy =
+        (Math.abs(eased.velocity) / MAX_SPEED) * 0.6 + (party ? 0.8 : 0);
       eased.energy += (energy - eased.energy) * (1 - Math.exp(-dt * 2));
 
       // Drift towards the current section's colour.
-      const tf = 1 - Math.exp(-dt * 2);
+      const tf = 1 - Math.exp(-dt * (party ? 6 : 2));
+      const goal = party ? hue(now / 2500) : sectionTint;
       eased.tint = eased.tint.map(
-        (v, i) => v + (sectionTint[i] - v) * tf,
+        (v, i) => v + (goal[i] - v) * tf,
       ) as typeof eased.tint;
       paintAura();
 

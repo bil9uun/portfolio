@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { swarmNames } from "@/data/portfolio";
+import { isParty } from "@/lib/party";
 import { swarm, type SwarmTask } from "@/lib/swarm";
 
 const COLORS = [
@@ -146,8 +147,11 @@ const SwarmCursors = () => {
       // 0 while the mouse moves, ramps to 1 after ~4s of stillness.
       const idle = mouse.active ? Math.min((now - mouse.last) / 4000, 1) : 1;
 
+      const party = isParty();
+
       // Step back while the visitor reads: fade when the mouse rests.
       const resting =
+        !party &&
         swarm.tasks.size === 0 &&
         !rect &&
         (!mouse.active || now - mouse.last > 2500);
@@ -167,6 +171,14 @@ const SwarmCursors = () => {
           tx = job.x;
           ty = job.y;
           k = 260;
+        } else if (party) {
+          // Konami code: a fast, pulsing ring round the middle of the screen.
+          const ang = (i / n) * Math.PI * 2 + t * 2.4;
+          const r =
+            Math.min(vw(), vh()) * 0.3 * (1 + 0.3 * Math.sin(t * 5 + i));
+          tx = vw() / 2 + Math.cos(ang) * r;
+          ty = vh() / 2 + Math.sin(ang) * r;
+          k = 40;
         } else if (rect) {
           const p = perimeterPoint(rect, i / n + t * 0.025, 18);
           tx = p.x;

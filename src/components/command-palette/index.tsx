@@ -6,21 +6,34 @@ import {
   ArrowRight,
   ArrowUpRight,
   Copy,
+  FileText,
   Gamepad2,
   Languages,
   MessageCircle,
   Phone,
   RotateCcw,
   ScanSearch,
+  Smartphone,
+  SquareTerminal,
+  Trophy,
   Volume2,
 } from "lucide-react";
 import { games } from "@/components/games/registry";
 import { navItems, profile, projects } from "@/data/portfolio";
+import { achievements, unlocked } from "@/lib/achievements";
 import { setLang, ui, useLang, useT } from "@/lib/i18n";
 import { useGoToSection } from "@/lib/navigation";
 import { replayBuild } from "@/lib/replay";
 import { setSound, soundOn } from "@/lib/sound";
-import { chatOpen, inspectMode, paletteOpen, useStore } from "@/lib/store";
+import {
+  chatOpen,
+  inspectMode,
+  paletteOpen,
+  terminalCommand,
+  terminalOpen,
+  useStore,
+} from "@/lib/store";
+import { enableTilt, tilt, tiltNeedsPermission } from "@/lib/tilt";
 
 const Item = ({
   icon,
@@ -53,6 +66,7 @@ const CommandPalette = () => {
   const open = useStore(paletteOpen);
   const navigate = useNavigate();
   const goToSection = useGoToSection();
+  const found = useStore(unlocked).size;
 
   // Close first, then act, so the dialog never covers the result.
   const run = (action: () => void) => () => {
@@ -172,6 +186,47 @@ const CommandPalette = () => {
           >
             {tr(ui.toggleSound)}
           </Item>
+          <Item
+            icon={<SquareTerminal />}
+            keywords={["terminal", "shell", "cli", "console"]}
+            onSelect={run(() => terminalOpen.set(true))}
+          >
+            {tr(ui.terminal)}
+            <kbd className="ml-auto font-mono text-[11px] text-fog">`</kbd>
+          </Item>
+          <Item
+            icon={<FileText />}
+            keywords={["cv", "resume", "pdf", "print", "анкет"]}
+            onSelect={run(() => void navigate({ to: "/cv" }))}
+          >
+            {tr(ui.viewCv)}
+          </Item>
+          <Item
+            icon={<Trophy />}
+            keywords={["achievements", "badges", "secrets", "амжилт"]}
+            onSelect={run(() => {
+              terminalCommand.set("achievements");
+              terminalOpen.set(true);
+            })}
+          >
+            {tr(ui.achievementsLabel)}
+            <span className="ml-auto font-mono text-[11px] text-fog">
+              {found}/{achievements.length}
+            </span>
+          </Item>
+          {tiltNeedsPermission && !tilt.active && (
+            <Item
+              icon={<Smartphone />}
+              keywords={["tilt", "motion", "gyro", "phone"]}
+              onSelect={() => {
+                // iOS only asks inside the tap itself, so don't defer this.
+                void enableTilt();
+                paletteOpen.set(false);
+              }}
+            >
+              {tr(ui.enableTilt)}
+            </Item>
+          )}
         </Command.Group>
 
         <Command.Group heading={tr(ui.play)} className={group}>

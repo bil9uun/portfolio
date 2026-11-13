@@ -22,7 +22,6 @@ export const navItems = [
   { id: "expertise", label: t("expertise", "ур чадвар") },
   { id: "work", label: t("work", "төслүүд") },
   { id: "experience", label: t("experience", "туршлага") },
-  { id: "education", label: t("education", "боловсрол") },
   { id: "play", label: t("play", "тоглоом") },
   { id: "contact", label: t("contact", "холбоо барих") },
 ];
@@ -30,8 +29,7 @@ export const navItems = [
 export const sectionTitles = {
   expertise: t("My expertise", "Миний ур чадвар"),
   work: t("Selected work", "Сонгосон төслүүд"),
-  experience: t("Experience", "Ажлын туршлага"),
-  education: t("Education", "Боловсрол"),
+  experience: t("From medicine to code", "Анагаахаас код руу"),
   play: t("Take a break", "Жаахан амар"),
   contact: t("Have a project in mind?", "Хамтран ажиллах санаа байна уу?"),
 };
@@ -88,6 +86,14 @@ export type Project = {
   tags: string[];
   url: string;
   colors: [string, string];
+  /** How I came to the project: built it, led its frontend, or took it over. */
+  involvement: "built" | "lead" | "took-over";
+};
+
+export const involvementLabels = {
+  built: t("Built from scratch", "Эхнээс нь бүтээсэн"),
+  lead: t("Frontend lead", "Фронтенд хариуцсан"),
+  "took-over": t("Took over", "Хүлээн авч хөгжүүлсэн"),
 };
 
 // TODO: set `url` for projects that have a public link.
@@ -138,6 +144,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "Tailwind", "Jotai", "Video.js", "Turborepo"],
     url: "https://ntv.mn",
     colors: ["#FF4D4D", "#FF7A45"],
+    involvement: "built",
   },
   {
     slug: "shunkhlai-loyalty",
@@ -181,6 +188,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "MUI", "TanStack Query", "Turborepo"],
     url: "#",
     colors: ["#A57BFF", "#FF5CA8"],
+    involvement: "took-over",
   },
   {
     slug: "gs25-vendor-portal",
@@ -227,6 +235,7 @@ export const projects: Project[] = [
     tags: ["React", "TanStack Router", "TanStack Query", "Turborepo"],
     url: "https://vendor.dico.mn/auth/login",
     colors: ["#4D8DFF", "#2EC4D6"],
+    involvement: "lead",
   },
   {
     slug: "gs25-parttime",
@@ -273,6 +282,7 @@ export const projects: Project[] = [
     tags: ["React", "TanStack Router", "Mantine", "Next.js"],
     url: "#",
     colors: ["#FFB020", "#FF7A45"],
+    involvement: "took-over",
   },
   {
     slug: "apu-ontap",
@@ -327,6 +337,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "TanStack Query", "Tailwind", "next-intl"],
     url: "#",
     colors: ["#22C55E", "#0E7C86"],
+    involvement: "built",
   },
   {
     slug: "sg-mn",
@@ -373,6 +384,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "Framer Motion", "i18next", "Ant Design"],
     url: "https://sg.mn",
     colors: ["#2EC4D6", "#22C55E"],
+    involvement: "took-over",
   },
   {
     slug: "takhi",
@@ -416,11 +428,14 @@ export const projects: Project[] = [
     tags: ["Next.js", "Tailwind", "next-intl", "Framer Motion"],
     url: "https://takhi.mn/en",
     colors: ["#D9A441", "#7A9E4B"],
+    involvement: "built",
   },
 ];
 
 export type TimelineItem = {
   period: Text;
+  /** Start and end as decimal years, for the career track; null = now. */
+  span: [number, number | null];
   role: Text;
   org: string;
   summary: Text;
@@ -430,6 +445,7 @@ export type TimelineItem = {
 export const experience: TimelineItem[] = [
   {
     period: t("2024 — Now", "2024 — Одоо"),
+    span: [2024.42, null],
     role: t("Frontend developer", "Фронтенд хөгжүүлэгч"),
     org: "Zero technology LLC",
     summary: t(
@@ -440,6 +456,7 @@ export const experience: TimelineItem[] = [
   },
   {
     period: t("Feb — May 2024", "2024.02 — 2024.05"),
+    span: [2024.08, 2024.33],
     role: t("Frontend developer", "Фронтенд хөгжүүлэгч"),
     org: "Prohub LLC",
     summary: t(
@@ -452,6 +469,7 @@ export const experience: TimelineItem[] = [
 
 export type Education = {
   period: string;
+  span: [number, number];
   school: Text;
   credential: Text;
   level: Text;
@@ -462,6 +480,7 @@ export type Education = {
 export const education: Education[] = [
   {
     period: "2023 — 2024",
+    span: [2023, 2024],
     school: t("Pinecone Academy", "Pinecone Академи"),
     credential: t("Full stack development", "Full stack хөгжүүлэлт"),
     level: t("Professional program", "Мэргэшүүлэх хөтөлбөр"),
@@ -473,6 +492,7 @@ export const education: Education[] = [
   },
   {
     period: "2017 — 2023",
+    span: [2017, 2023],
     school: t(
       "Mongolian National University of Medical Sciences",
       "Анагаахын Шинжлэх Ухааны Үндэсний Их Сургууль",
@@ -483,6 +503,7 @@ export const education: Education[] = [
   },
   {
     period: "2007 — 2017",
+    span: [2007, 2017],
     school: t("School No. 93", "Гоц авьяастны 93-р сургууль"),
     credential: t("Full secondary education", "Бүрэн дунд боловсрол"),
     level: t("Gifted and talented school", "Гоц авьяастны сургууль"),

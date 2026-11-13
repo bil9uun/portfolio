@@ -89,28 +89,62 @@ html.inspecting * {
   mask-image: none;
 }
 
-/* Body copy wrapped in faux <p> tags */
-.heading {
-  position: relative;
-  border-left: 1px solid var(--color-line);
-  font-size: 18px;
-  line-height: 1.6;
+
+/* Party mode (Konami code): the name hops in every colour. */
+.party [data-letter] {
+  color: hsl(calc(var(--i) * 40) 90% 65%);
+  animation: party-hop 0.45s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i) * -0.06s);
 }
-.heading::before,
-.heading::after {
-  position: absolute;
-  left: -1.25rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: color-mix(in oklab, var(--color-fog) 65%, transparent);
+@keyframes party-hop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-12%) rotate(-4deg);
+  }
 }
-.heading::before {
-  content: "<p>";
-  top: -1.9rem;
-}
-.heading::after {
-  content: "</p>";
-  bottom: -1.9rem;
+
+/* Printing the CV page: only the sheet, on white paper. */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 16mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+  }
+  #root > :not(#smooth-wrapper),
+  [data-print-hide],
+  [data-frame] {
+    display: none !important;
+  }
+  #smooth-wrapper {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  #smooth-content {
+    transform: none !important;
+  }
+  [data-cv-page] {
+    padding: 0 !important;
+  }
+  [data-cv] {
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  [data-cv] * {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

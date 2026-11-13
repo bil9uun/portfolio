@@ -86,4 +86,24 @@ export const ui = {
   call: t("Call", "Залгах"),
   play: t("Play", "Тоглох"),
   allGames: t("All games", "Бүх тоглоом"),
+  // What I'm probably doing, by Ulaanbaatar time
+  status: {
+    working: t("probably coding", "код бичиж байгаа байх"),
+    free: t("off the clock", "чөлөөт цагаараа"),
+    asleep: t("probably asleep", "унтаж байгаа байх"),
+  },
+  greeting: (name: string) =>
+    t(
+      `Hi, ${name}. This one's for you.`,
+      `Сайн байна уу, ${name}. Танд зориулав.`,
+    ),
+  cv: t("CV", "CV"),
+  viewCv: t("View CV", "CV үзэх"),
+  terminal: t("Open the terminal", "Terminal нээх"),
+  achievementsLabel: t("Achievements", "Амжилтууд"),
+  achievementUnlocked: t("Achievement unlocked", "Амжилт нээгдлээ"),
+  enableTilt: t(
+    "Tilt your phone to move the background",
+    "Утсаа хазайлгаж background хөдөлгөх",
+  ),
 };

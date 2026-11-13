@@ -52,3 +52,6 @@ export const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
   (target.isContentEditable ||
     /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+export const terminalOpen = createStore(false);
+// A command for the terminal to run as soon as it opens.
+export const terminalCommand = createStore<string | null>(null);

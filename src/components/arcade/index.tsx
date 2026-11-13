@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Build from "@/components/build";
+import OffClock from "@/components/off-clock";
 import SectionHeading from "@/components/section-heading";
 import { games } from "@/components/games/registry";
 import { readBest } from "@/components/games/use-best";
@@ -120,6 +121,7 @@ const ArcadeSection = () => {
                 />
               </Link>
             </Build>
+            <OffClock />
           </div>
         </div>
       </div>
